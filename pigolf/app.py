@@ -29,7 +29,7 @@ class Camera:
 
     def getFrame(self):
         print("getFrame: init")
-        if self.cam.rawCapture:
+        if self.rawCapture:
             print("getFrame: inside if")
             output = self.rawCapture
             try:
