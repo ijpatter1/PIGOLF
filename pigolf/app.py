@@ -76,7 +76,7 @@ class Display:
                 pass
 
 
-class TabBar(tk.Frame):
+class TabBar:
     pass
 
 
