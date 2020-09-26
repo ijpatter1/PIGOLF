@@ -51,6 +51,7 @@ class Display:
     def __init__(self, parent, window):
         self.parent = parent
         self.window = window
+        print(self.parent.cam.width)
         self.canvas = tk.Canvas(window, width=self.parent.cam.width, height=self.parent.cam.height)
         self.canvas.pack()
 
@@ -61,11 +62,11 @@ class Display:
         """
         # print("processIncoming: init")
         while self.parent.queue.qsize():
-            print("processIncoming: inside while loop")
+            # print("processIncoming: inside while loop")
             try:
                 msg = self.parent.queue.get(0)
                 if msg[0] == 'frame':
-                    print("processIncoming: inside if msg:")
+                    # print("processIncoming: inside if msg:")
                     photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
                     self.canvas.create_image(0, 0, image=photo, anchor=tk.NW)
                 else:
