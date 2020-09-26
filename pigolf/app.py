@@ -106,7 +106,7 @@ class App:
         self.queue = queue.Queue()
 
         self.display = Display(self, parent)
-        self.toolbar = TabBar(self, parent)
+        # self.toolbar = TabBar(self, parent)
 
         self.running = 1
         self.currentFile = ""
