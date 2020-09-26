@@ -13,7 +13,6 @@ class Camera:
     """
     Video capture class with related methods
     """
-
     def __init__(self):
         # initialize the camera
         self.camera = picamera.PiCamera()
@@ -47,11 +46,9 @@ class Display:
     """
     Video stream display class
     """
-
     def __init__(self, parent, window):
         self.parent = parent
         self.window = window
-        print(self.parent.cam.width)
         self.canvas = tk.Canvas(window, width=self.parent.cam.width, height=self.parent.cam.height)
         self.canvas.pack()
 
@@ -67,8 +64,8 @@ class Display:
                 msg = self.parent.queue.get(0)
                 if msg[0] == 'frame':
                     # print("processIncoming: inside if msg:")
-                    photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
-                    self.canvas.create_image(0, 0, image=photo, anchor=tk.NW)
+                    self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
+                    self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
                 else:
                     pass
             except self.parent.queue.Empty:
