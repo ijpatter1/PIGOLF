@@ -123,12 +123,13 @@ class App(tk.Frame):
         Handle all messages currently in the queue, if any.
         :return:
         """
-        print("processIncoming: init")
+        # print("processIncoming: init")
         while self.queue.qsize():
-            print("processIncoming: inside while loop")
+            # print("processIncoming: inside while loop")
             try:
                 msg = self.queue.get(0)
                 if msg[0] == 'frame':
+                    print("processIncoming: inside if msg:")
                     photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
                     self.display.canvas.create_image(0, 0, image=photo, anchor=tk.NW)
                 else:
