@@ -60,19 +60,7 @@ def getFrame(self):
             pass
 
 
-def displayThread(self):
-    """
-    This thread handles the video feed to be displayed
-    by the gui object.
-    :return:
-    """
-    try:
-        while self.running:
-            time.sleep(0.034)
-            self.cam.camera.wait_recording()
-            self.queue.put(getFrame(self))
-    finally:
-        return
+
 
 
 def recordThread(self):
@@ -122,15 +110,29 @@ class App(tk.Frame):
         self.currentFile = ""
 
         # Thread for handling the video feed
-        self.dispThread = threading.Thread(target=displayThread(self))
+        self.dispThread = threading.Thread(target=self.displayThread)
         self.dispThread.start()
 
         # Thread for recording
-        self.recThread = threading.Thread(target=recordThread(self))
-        self.recThread.start()
+        # self.recThread = threading.Thread(target=recordThread(self))
+        # self.recThread.start()
 
         # Start the periodic call in the GUI to check the queue
         self.periodicCall()
+
+    def displayThread(self):
+        """
+        This thread handles the video feed to be displayed
+        by the gui object.
+        :return:
+        """
+        try:
+            while self.running:
+                time.sleep(0.034)
+                self.cam.camera.wait_recording()
+                self.queue.put(getFrame(self))
+        finally:
+            return
 
     def periodicCall(self):
         """
@@ -147,7 +149,7 @@ class App(tk.Frame):
             self.parent.destroy()
             import sys
             sys.exit(1)
-        self.parent.after(17, self.periodicCall())
+        self.parent.after(17, self.periodicCall)
 
 
 if __name__ == "__main__":
