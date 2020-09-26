@@ -68,6 +68,7 @@ def processIncoming(self):
     :return:
     """
     while self.queue.qsize():
+        print("check")
         try:
             msg = self.queue.get(0)
             if msg[0] == 'frame':
