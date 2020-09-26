@@ -48,8 +48,7 @@ class Display(tk.Frame):
     Video stream display class
     """
 
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent, *args, **kwargs)
+    def __init__(self, parent):
         self.parent = parent
         self.canvas = tk.Canvas(parent, width=self.parent.cam.width, height=self.parent.cam.height)
         self.canvas.pack()
