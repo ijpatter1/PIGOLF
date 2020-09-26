@@ -44,8 +44,8 @@ class TabBar(tk.Frame):
 
 
 def ask_quit(self):
-    pass
-
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        self.running = 0
 
 def getFrame(self):
     if self.cam.rawCapture:
@@ -98,24 +98,6 @@ def processIncoming(self):
             pass
 
 
-def periodicCall(self):
-    """
-    Check every 17 ms if there is something new in the queue.
-    :return:
-    """
-    processIncoming(self)
-    if not self.running:
-        # This is the brutal stop of the system. I may want to do
-        # some more cleanup before actually shutting it down.
-        self.cam.camera.stop_recording()
-        self.cam.camera.close()
-        # Shuts down the app
-        self.parent.destroy()
-        import sys
-        sys.exit(1)
-    self.parent.after(17, periodicCall(self))
-
-
 class App(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -148,7 +130,24 @@ class App(tk.Frame):
         self.recThread.start()
 
         # Start the periodic call in the GUI to check the queue
-        periodicCall(self)
+        self.periodicCall()
+
+    def periodicCall(self):
+        """
+        Check every 17 ms if there is something new in the queue.
+        :return:
+        """
+        processIncoming(self)
+        if not self.running:
+            # This is the brutal stop of the system. I may want to do
+            # some more cleanup before actually shutting it down.
+            self.cam.camera.stop_recording()
+            self.cam.camera.close()
+            # Shuts down the app
+            self.parent.destroy()
+            import sys
+            sys.exit(1)
+        self.parent.after(17, self.periodicCall())
 
 
 if __name__ == "__main__":
