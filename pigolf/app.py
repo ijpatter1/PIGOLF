@@ -66,6 +66,7 @@ def processIncoming(self):
     Handle all messages currently in the queue, if any.
     :return:
     """
+    print("check")
     while self.queue.qsize():
         try:
             msg = self.queue.get(0)
