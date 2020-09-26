@@ -33,7 +33,7 @@ class Camera:
             print("getFrame: inside if")
             output = self.rawCapture
             try:
-                self.cam.camera.capture(output, format="rgb", use_video_port=True)
+                self.camera.capture(output, format="rgb", use_video_port=True)
                 frame = output.array
                 output.truncate(0)
                 msg = ['frame', frame]
