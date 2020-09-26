@@ -1,0 +1,158 @@
+import time
+import queue
+import threading
+import tkinter as tk
+from tkinter import messagebox
+import PIL.Image
+import PIL.ImageTk
+import picamera
+from picamera.array import PiRGBArray
+
+
+class Camera:
+    """
+    Video capture class with related methods
+    """
+
+    def __init__(self):
+        # initialize the camera
+        self.camera = picamera.PiCamera()
+        self.camera.resolution = (480, 640)
+        self.camera.framerate = 30
+        self.width = 480
+        self.height = 640
+
+        self.rawCapture = PiRGBArray(self.camera, size=(self.width, self.height))
+
+        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
+        self.camera.start_recording(self.stream, format='h264')
+
+
+class Display(tk.Frame):
+    """
+    Video stream display class
+    """
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.parent = parent
+        self.canvas = tk.Canvas(parent, width=self.parent.cam.width, height=self.parent.cam.height)
+        self.canvas.pack()
+
+
+class TabBar(tk.Frame):
+    pass
+
+
+def ask_quit(self):
+    pass
+
+
+def getFrame(self):
+    if self.cam.rawCapture:
+        output = self.rawCapture
+        try:
+            self.cam.camera.capture(output, format="rgb", use_video_port=True)
+            frame = output.array
+            output.truncate(0)
+            msg = ['frame', frame]
+            return msg
+        finally:
+            pass
+
+
+def displayThread(self):
+    """
+    This thread handles the video feed to be displayed
+    by the gui object.
+    :return:
+    """
+    try:
+        while self.running:
+            time.sleep(0.034)
+            self.cam.camera.wait_recording()
+            self.queue.put(getFrame(self))
+    finally:
+        return
+
+
+def recordThread(self):
+    pass
+
+
+def processIncoming(self):
+    """
+    Handle all messages currently in the queue, if any.
+    :return:
+    """
+    while self.queue.qsize():
+        try:
+            msg = self.queue.get(0)
+            if msg[0] == 'frame':
+                photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
+                self.display.canvas.create_image(0, 0, image=photo, anchor=tk.NW)
+            else:
+                pass
+        except self.queue.Empty:
+            # just on general principles, although we don't
+            # expect this branch to ever be taken
+            pass
+
+
+def periodicCall(self):
+    """
+    Check every 17 ms if there is something new in the queue.
+    :return:
+    """
+    processIncoming(self)
+    if not self.running:
+        # This is the brutal stop of the system. I may want to do
+        # some more cleanup before actually shutting it down.
+        self.cam.camera.stop_recording()
+        self.cam.camera.close()
+        # Shuts down the app
+        self.parent.destroy()
+        import sys
+        sys.exit(1)
+    self.parent.after(17, periodicCall(self))
+
+
+class App(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+
+        # define our parent frame config
+        self.parent = parent
+        self.parent.title("PIGOLF")
+        self.parent.minsize(480, 800)
+        self.parent.maxsize(480, 800)
+
+        # This protocol method is a tkinter built-in method to catch if
+        # the user clicks the upper corner, "X" on Windows OS
+        self.parent.protocol("WM_DELETE_WINDOW", lambda: ask_quit(self))
+
+        self.cam = Camera()
+        self.queue = queue.Queue()
+
+        self.display = Display(self)
+        self.toolbar = TabBar(self)
+
+        self.running = 1
+        self.currentFile = ""
+
+        # Thread for handling the video feed
+        self.dispThread = threading.Thread(target=displayThread(self))
+        self.dispThread.start()
+
+        # Thread for recording
+        self.recThread = threading.Thread(target=recordThread(self))
+        self.recThread.start()
+
+        # Start the periodic call in the GUI to check the queue
+        periodicCall(self)
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+
+    app = App(root)
+    root.mainloop()
