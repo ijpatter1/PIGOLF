@@ -43,7 +43,7 @@ class Camera:
                 pass
 
 
-class Display(tk.Frame):
+class Display:
     """
     Video stream display class
     """
@@ -52,6 +52,27 @@ class Display(tk.Frame):
         self.parent = parent
         self.canvas = tk.Canvas(parent, width=self.parent.cam.width, height=self.parent.cam.height)
         self.canvas.pack()
+
+    def processIncoming(self):
+        """
+        Handle all messages currently in the queue, if any.
+        :return:
+        """
+        # print("processIncoming: init")
+        while self.parent.queue.qsize():
+            print("processIncoming: inside while loop")
+            try:
+                msg = self.parent.queue.get(0)
+                if msg[0] == 'frame':
+                    print("processIncoming: inside if msg:")
+                    photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
+                    self.canvas.create_image(0, 0, image=photo, anchor=tk.NW)
+                else:
+                    pass
+            except self.parent.queue.Empty:
+                # just on general principles, although we don't
+                # expect this branch to ever be taken
+                pass
 
 
 class TabBar(tk.Frame):
@@ -117,33 +138,12 @@ class App(tk.Frame):
         finally:
             return
 
-    def processIncoming(self):
-        """
-        Handle all messages currently in the queue, if any.
-        :return:
-        """
-        # print("processIncoming: init")
-        while self.queue.qsize():
-            # print("processIncoming: inside while loop")
-            try:
-                msg = self.queue.get(0)
-                if msg[0] == 'frame':
-                    print("processIncoming: inside if msg:")
-                    photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
-                    self.display.canvas.create_image(0, 0, image=photo, anchor=tk.NW)
-                else:
-                    pass
-            except self.queue.Empty:
-                # just on general principles, although we don't
-                # expect this branch to ever be taken
-                pass
-
     def periodicCall(self):
         """
         Check every 17 ms if there is something new in the queue.
         :return:
         """
-        self.processIncoming()
+        self.display.processIncoming()
         if not self.running:
             # This is the brutal stop of the system. I may want to do
             # some more cleanup before actually shutting it down.
