@@ -28,13 +28,16 @@ class Camera:
         self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self):
+        print("getFrame: init")
         if self.cam.rawCapture:
+            print("getFrame: inside if")
             output = self.rawCapture
             try:
                 self.cam.camera.capture(output, format="rgb", use_video_port=True)
                 frame = output.array
                 output.truncate(0)
                 msg = ['frame', frame]
+                print("getFrame: msg sent")
                 return msg
             finally:
                 pass
