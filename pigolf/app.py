@@ -27,6 +27,18 @@ class Camera:
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
         self.camera.start_recording(self.stream, format='h264')
 
+    def getFrame(self):
+        if self.cam.rawCapture:
+            output = self.rawCapture
+            try:
+                self.cam.camera.capture(output, format="rgb", use_video_port=True)
+                frame = output.array
+                output.truncate(0)
+                msg = ['frame', frame]
+                return msg
+            finally:
+                pass
+
 
 class Display(tk.Frame):
     """
@@ -49,26 +61,12 @@ def ask_quit(self):
         self.running = 0
 
 
-def getFrame(self):
-    if self.cam.rawCapture:
-        output = self.rawCapture
-        try:
-            self.cam.camera.capture(output, format="rgb", use_video_port=True)
-            frame = output.array
-            output.truncate(0)
-            msg = ['frame', frame]
-            return msg
-        finally:
-            pass
-
-
 def processIncoming(self):
     """
     Handle all messages currently in the queue, if any.
     :return:
     """
     while self.queue.qsize():
-        print("check")
         try:
             msg = self.queue.get(0)
             if msg[0] == 'frame':
@@ -130,7 +128,8 @@ class App(tk.Frame):
             while self.running:
                 time.sleep(0.034)
                 self.cam.camera.wait_recording()
-                self.queue.put(getFrame(self))
+                frame = self.cam.getFrame()
+                self.queue.put(frame)
         finally:
             return
 
