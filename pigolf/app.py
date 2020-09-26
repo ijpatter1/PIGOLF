@@ -66,7 +66,6 @@ def processIncoming(self):
     Handle all messages currently in the queue, if any.
     :return:
     """
-    print("check")
     while self.queue.qsize():
         try:
             msg = self.queue.get(0)
@@ -127,6 +126,7 @@ class App(tk.Frame):
         """
         try:
             while self.running:
+                print("check")
                 time.sleep(0.034)
                 self.cam.camera.wait_recording()
                 frame = self.cam.getFrame()
