@@ -32,6 +32,7 @@ class Display(tk.Frame):
     """
     Video stream display class
     """
+
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
@@ -47,6 +48,7 @@ def ask_quit(self):
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
         self.running = 0
 
+
 def getFrame(self):
     if self.cam.rawCapture:
         output = self.rawCapture
@@ -58,13 +60,6 @@ def getFrame(self):
             return msg
         finally:
             pass
-
-
-
-
-
-def recordThread(self):
-    pass
 
 
 def processIncoming(self):
@@ -84,6 +79,10 @@ def processIncoming(self):
             # just on general principles, although we don't
             # expect this branch to ever be taken
             pass
+
+
+def recordThread(self):
+    pass
 
 
 class App(tk.Frame):
