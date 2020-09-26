@@ -48,9 +48,10 @@ class Display:
     Video stream display class
     """
 
-    def __init__(self, parent):
+    def __init__(self, parent, window):
         self.parent = parent
-        self.canvas = tk.Canvas(parent, width=self.parent.cam.width, height=self.parent.cam.height)
+        self.window = window
+        self.canvas = tk.Canvas(window, width=self.parent.cam.width, height=self.parent.cam.height)
         self.canvas.pack()
 
     def processIncoming(self):
@@ -88,9 +89,8 @@ def recordThread(self):
     pass
 
 
-class App(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent, *args, **kwargs)
+class App:
+    def __init__(self, parent):
 
         # define our parent frame config
         self.parent = parent
@@ -105,8 +105,8 @@ class App(tk.Frame):
         self.cam = Camera()
         self.queue = queue.Queue()
 
-        self.display = Display(self)
-        self.toolbar = TabBar(self)
+        self.display = Display(self, parent)
+        self.toolbar = TabBar(self, parent)
 
         self.running = 1
         self.currentFile = ""
