@@ -28,16 +28,16 @@ class Camera:
         self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self):
-        print("getFrame: init")
+        # print("getFrame: init")
         if self.rawCapture:
-            print("getFrame: inside if")
+            # print("getFrame: inside if")
             output = self.rawCapture
             try:
                 self.camera.capture(output, format="rgb", use_video_port=True)
                 frame = output.array
                 output.truncate(0)
                 msg = ['frame', frame]
-                print("getFrame: msg sent")
+                # print("getFrame: msg sent")
                 return msg
             finally:
                 pass
@@ -62,25 +62,6 @@ class TabBar(tk.Frame):
 def ask_quit(self):
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
         self.running = 0
-
-
-def processIncoming(self):
-    """
-    Handle all messages currently in the queue, if any.
-    :return:
-    """
-    while self.queue.qsize():
-        try:
-            msg = self.queue.get(0)
-            if msg[0] == 'frame':
-                photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
-                self.display.canvas.create_image(0, 0, image=photo, anchor=tk.NW)
-            else:
-                pass
-        except self.queue.Empty:
-            # just on general principles, although we don't
-            # expect this branch to ever be taken
-            pass
 
 
 def recordThread(self):
@@ -129,7 +110,7 @@ class App(tk.Frame):
         """
         try:
             while self.running:
-                print("check")
+                # print("displayThread: inside while loop")
                 time.sleep(0.034)
                 self.cam.camera.wait_recording()
                 frame = self.cam.getFrame()
@@ -137,12 +118,32 @@ class App(tk.Frame):
         finally:
             return
 
+    def processIncoming(self):
+        """
+        Handle all messages currently in the queue, if any.
+        :return:
+        """
+        print("processIncoming: init")
+        while self.queue.qsize():
+            print("processIncoming: inside while loop")
+            try:
+                msg = self.queue.get(0)
+                if msg[0] == 'frame':
+                    photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
+                    self.display.canvas.create_image(0, 0, image=photo, anchor=tk.NW)
+                else:
+                    pass
+            except self.queue.Empty:
+                # just on general principles, although we don't
+                # expect this branch to ever be taken
+                pass
+
     def periodicCall(self):
         """
         Check every 17 ms if there is something new in the queue.
         :return:
         """
-        processIncoming(self)
+        self.processIncoming()
         if not self.running:
             # This is the brutal stop of the system. I may want to do
             # some more cleanup before actually shutting it down.
