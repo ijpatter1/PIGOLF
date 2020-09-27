@@ -74,8 +74,10 @@ class Display:
                 pass
 
 
-class TabBar:
-    pass
+# class TabBar(tk.Frame):
+#     def __init__(self, parent, *args, **kwargs):
+#         tk.Frame(self, parent, *args, **kwargs)
+#         self.parent = parent
 
 
 def ask_quit(self):
@@ -87,9 +89,9 @@ def recordThread(self):
     pass
 
 
-class App:
-    def __init__(self, parent):
-
+class App(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
         # define our parent frame config
         self.parent = parent
         self.parent.title("PIGOLF")
@@ -104,7 +106,7 @@ class App:
         self.queue = queue.Queue()
 
         self.display = Display(self, parent)
-        # self.toolbar = TabBar(self, parent)
+        # self.tbar = TabBar(self)
 
         self.running = 1
         self.currentFile = ""
