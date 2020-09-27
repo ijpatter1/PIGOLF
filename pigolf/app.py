@@ -96,8 +96,7 @@ class App:
         self.parent = parent
         self.parent.configure(background="black", borderwidth=0)
         self.parent.title("PIGOLF")
-        self.parent.minsize(480, 700)
-        self.parent.maxsize(480, 700)
+        self.parent.attributes('-zoomed', True)
 
         # This protocol method is a tkinter built-in method to catch if
         # the user clicks the upper corner, "X" on Windows OS
