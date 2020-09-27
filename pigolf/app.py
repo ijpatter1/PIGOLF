@@ -90,8 +90,9 @@ def recordThread(self):
     pass
 
 
-class App:
-    def __init__(self, parent):
+class App(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
         # define our parent frame config
         self.parent = parent
         self.parent.configure(background="black", borderwidth=0)
