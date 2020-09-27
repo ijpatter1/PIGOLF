@@ -49,7 +49,7 @@ class Display:
     def __init__(self, parent):
         self.parent = parent
         self.photo = None
-        self.canvas = tk.Canvas(parent, width=self.parent.cam.width, height=self.parent.cam.height,
+        self.canvas = tk.Canvas(self.parent, width=self.parent.cam.width, height=self.parent.cam.height,
                                 borderwidth=0)
         self.canvas.pack()
 
