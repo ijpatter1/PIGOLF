@@ -49,7 +49,8 @@ class Display:
     def __init__(self, parent, window):
         self.parent = parent
         self.window = window
-        self.canvas = tk.Canvas(window, width=self.parent.cam.width, height=self.parent.cam.height)
+        self.canvas = tk.Canvas(window, width=self.parent.cam.width, height=self.parent.cam.height,
+                                borderwidth=0)
         self.canvas.pack()
 
     def processIncoming(self):
