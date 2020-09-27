@@ -46,10 +46,10 @@ class Display:
     """
     Video stream display class
     """
-    def __init__(self, parent, window):
+    def __init__(self, parent):
         self.parent = parent
-        self.window = window
-        self.canvas = tk.Canvas(window, width=self.parent.cam.width, height=self.parent.cam.height,
+        self.photo = None
+        self.canvas = tk.Canvas(parent, width=self.parent.cam.width, height=self.parent.cam.height,
                                 borderwidth=0)
         self.canvas.pack()
 
@@ -75,10 +75,10 @@ class Display:
                 pass
 
 
-# class TabBar(tk.Frame):
-#     def __init__(self, parent, *args, **kwargs):
-#         tk.Frame(self, parent, *args, **kwargs)
-#         self.parent = parent
+class TabBar(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.parent = parent
 
 
 def ask_quit(self):
@@ -106,8 +106,8 @@ class App(tk.Frame):
         self.cam = Camera()
         self.queue = queue.Queue()
 
-        self.display = Display(self, parent)
-        # self.tbar = TabBar(self)
+        self.display = Display(self)
+        self.tbar = TabBar(self)
 
         self.running = 1
         self.currentFile = ""
