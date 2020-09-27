@@ -94,7 +94,7 @@ class App(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         # define our parent frame config
         self.parent = parent
-        self.parent.configure(background="black")
+        self.parent.configure(background="black", borderwidth=0)
         self.parent.title("PIGOLF")
         self.parent.minsize(480, 800)
         self.parent.maxsize(480, 800)
