@@ -102,7 +102,7 @@ class App(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         # define our parent frame config
         self.parent = parent
-        self.parent.configure(background="grey", borderwidth=0)
+        self.parent.configure(background="gray", borderwidth=0)
         self.parent.title("PIGOLF")
         # full screen app
         self.parent.attributes('-zoomed', True)
