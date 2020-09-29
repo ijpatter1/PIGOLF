@@ -13,6 +13,7 @@ class Camera:
     """
     Video capture class with related methods
     """
+
     def __init__(self):
         # initialize the camera
         self.camera = picamera.PiCamera()
@@ -46,6 +47,7 @@ class Display:
     """
     Video stream display class
     """
+
     def __init__(self, parent):
         self.parent = parent
         self.window = self.parent.parent
@@ -86,9 +88,9 @@ class TabBar(tk.Frame):
         self.recImg = ImageTk.PhotoImage(Image.open("./images/recBtn-01.png"))
         self.stpImg = ImageTk.PhotoImage(Image.open("./images/recBtn-02.png"))
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg, selectimage=self.stpImg,
-                                     indicatoron=0, variable=self.var, anchor=tk.N,
-                                     cursor="hand1", relief=tk.FLAT,
-                                     offrelief=tk.FLAT, borderwidth=0,
+                                     indicatoron=0, variable=self.var,
+                                     anchor=tk.N, pady=(0, 20), cursor="hand1",
+                                     relief=tk.FLAT, offrelief=tk.FLAT, borderwidth=0,
                                      background="black", highlightbackground="black",
                                      activebackground="black", selectcolor="black")
         self.recBtn.image_ref = (self.recImg, self.stpImg)
