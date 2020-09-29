@@ -103,7 +103,7 @@ class App(tk.Frame):
         # define our parent frame config
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry("478x638+0+0")
+        self.parent.geometry("478x750+0+0")
         self.parent.title("PIGOLF")
 
         # This protocol method is a tkinter built-in method to catch if
