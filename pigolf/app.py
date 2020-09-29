@@ -17,7 +17,7 @@ class Camera:
         # initialize the camera
         self.camera = picamera.PiCamera()
         self.camera.resolution = (480, 640)
-        self.camera.framerate = 30
+        self.camera.framerate = 40
         self.width = 480
         self.height = 640
 
@@ -82,15 +82,6 @@ class TabBar(tk.Frame):
         self.parent = parent
 
 
-def ask_quit(self):
-    if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        self.running = 0
-
-
-def recordThread(self):
-    pass
-
-
 class App(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -133,12 +124,15 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                time.sleep(0.034)
+                time.sleep(0.025)
                 self.cam.camera.wait_recording()
                 frame = self.cam.getFrame()
                 self.queue.put(frame)
         finally:
             return
+
+    def recordThread(self):
+        pass
 
     def periodicCall(self):
         """
@@ -155,7 +149,12 @@ class App(tk.Frame):
             self.parent.destroy()
             import sys
             sys.exit(1)
-        self.parent.after(17, self.periodicCall)
+        self.parent.after(12, self.periodicCall)
+
+
+def ask_quit(self):
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        self.running = 0
 
 
 if __name__ == "__main__":
