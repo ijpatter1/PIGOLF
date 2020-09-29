@@ -54,7 +54,7 @@ class Display():
         self.photo = None
         self.canvas = tk.Canvas(self.window,
                                 width=self.parent.cam.width, height=self.parent.cam.height,
-                                borderwidth=0)
+                                borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0, columnspan=3)
 
     def processIncoming(self):
