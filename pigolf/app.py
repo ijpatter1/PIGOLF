@@ -19,8 +19,8 @@ class Camera:
         self.camera = picamera.PiCamera()
         self.camera.resolution = (480, 640)
         self.camera.framerate = 40
-        self.width = 480
-        self.height = 640
+        self.width = 478
+        self.height = 638
 
         self.rawCapture = PiRGBArray(self.camera, size=(self.width, self.height))
 
@@ -43,7 +43,7 @@ class Camera:
                 pass
 
 
-class Display():
+class Display:
     """
     Video stream display class
     """
@@ -103,7 +103,7 @@ class App(tk.Frame):
         # define our parent frame config
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry("480x640+0+0")
+        self.parent.geometry("478x638+0+0")
         self.parent.title("PIGOLF")
 
         # This protocol method is a tkinter built-in method to catch if
