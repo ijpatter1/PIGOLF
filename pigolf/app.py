@@ -3,7 +3,8 @@ import queue
 import threading
 import tkinter as tk
 from tkinter import messagebox
-import PIL
+from PIL import ImageTk
+from PIL import Image
 import picamera
 from picamera.array import PiRGBArray
 
@@ -65,7 +66,7 @@ class Display:
                 msg = self.parent.queue.get(0)
                 if msg[0] == 'frame':
                     # print("processIncoming: inside if msg:")
-                    self.photo = PIL.ImageTk.PhotoImage(image=PIL.Image.fromarray(msg[1]))
+                    self.photo = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                     self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
                 else:
                     pass
@@ -82,8 +83,8 @@ class TabBar(tk.Frame):
         self.window = self.parent.parent
 
         self.var = tk.IntVar()
-        self.recImg = PIL.ImageTk.PhotoImage(PIL.Image.open("./images/photo0.png"))
-        self.stpImg = PIL.ImageTk.PhotoImage(PIL.Image.open("./images/photo1.png"))
+        self.recImg = ImageTk.PhotoImage(Image.open("./images/photo0.png"))
+        self.stpImg = ImageTk.PhotoImage(Image.open("./images/photo1.png"))
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg,
                                      selectimage=self.stpImg, indicatoron=0,
                                      variable=self.var, anchor=tk.CENTER)
