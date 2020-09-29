@@ -94,7 +94,7 @@ class TabBar():
                                      background="black", highlightbackground="black",
                                      activebackground="black", selectcolor="black")
         self.recBtn.image_ref = (self.recImg, self.stpImg)
-        self.recBtn.grid(row=1, column=1, sticky=tk.N)
+        self.recBtn.grid(row=1, column=1, sticky=tk.N, pady=(0, 15))
 
 
 class App(tk.Frame):
