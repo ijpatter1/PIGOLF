@@ -19,8 +19,8 @@ class Camera:
         self.camera = picamera.PiCamera()
         self.camera.resolution = (480, 640)
         self.camera.framerate = 40
-        self.width = 478
-        self.height = 639
+        self.width = 480
+        self.height = 640
 
         self.rawCapture = PiRGBArray(self.camera, size=(self.width, self.height))
 
