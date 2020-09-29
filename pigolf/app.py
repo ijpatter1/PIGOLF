@@ -83,8 +83,8 @@ class TabBar(tk.Frame):
         self.window = self.parent.parent
 
         self.var = tk.IntVar()
-        self.recImg = ImageTk.PhotoImage(Image.open("./images/photo-0.png"))
-        self.stpImg = ImageTk.PhotoImage(Image.open("./images/photo-01.png"))
+        self.recImg = ImageTk.PhotoImage(Image.open("./images/recBtn-0.png"))
+        self.stpImg = ImageTk.PhotoImage(Image.open("./images/recBtn-1.png"))
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg,
                                      selectimage=self.stpImg, indicatoron=0,
                                      variable=self.var, anchor=tk.CENTER, relief=tk.FLAT,
