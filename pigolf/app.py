@@ -43,19 +43,18 @@ class Camera:
                 pass
 
 
-class Display(tk.Frame):
+class Display():
     """
     Video stream display class
     """
 
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent, *args, **kwargs)
+    def __init__(self, parent):
         self.parent = parent
         self.window = self.parent.parent
         self.photo = None
-        self.canvas = tk.Canvas(self, width=self.parent.cam.width, height=self.parent.cam.height,
+        self.canvas = tk.Canvas(self.window, width=self.parent.cam.width, height=self.parent.cam.height,
                                 borderwidth=0)
-        self.canvas.grid()
+        self.canvas.grid(row=0, column=0, columnspan=3)
 
     def processIncoming(self):
         """
@@ -79,9 +78,8 @@ class Display(tk.Frame):
                 pass
 
 
-class TabBar(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent, *args, **kwargs)
+class TabBar():
+    def __init__(self, parent):
         self.parent = parent
         self.window = self.parent.parent
 
@@ -95,7 +93,7 @@ class TabBar(tk.Frame):
                                      background="black", highlightbackground="black",
                                      activebackground="black", selectcolor="black")
         self.recBtn.image_ref = (self.recImg, self.stpImg)
-        self.recBtn.grid()
+        self.recBtn.grid(row=1, column=1)
 
 
 class App(tk.Frame):
@@ -116,9 +114,7 @@ class App(tk.Frame):
         self.queue = queue.Queue()
 
         self.display = Display(self)
-        self.display.grid(row=0, column=1, columnspan=3)
         self.tbar = TabBar(self)
-        self.tbar.grid(row=1, column=1, columnspan=3)
 
         self.running = 1
         self.currentFile = ""
