@@ -80,6 +80,13 @@ class TabBar(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
+        self.window = self.parent.parent
+
+        self.var = tk.IntVar()
+        self.recBtn = tk.Checkbutton(self.window, text='REC', indicatoron=0,
+                                     variable=self.var, anchor=tk.CENTER)
+        self.recBtn.configure(width=5, height=2)
+        self.recBtn.pack()
 
 
 class App(tk.Frame):
@@ -89,6 +96,7 @@ class App(tk.Frame):
         self.parent = parent
         self.parent.configure(background="black", borderwidth=0)
         self.parent.title("PIGOLF")
+        # full screen app
         self.parent.attributes('-zoomed', True)
 
         # This protocol method is a tkinter built-in method to catch if
