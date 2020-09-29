@@ -149,7 +149,7 @@ class App(tk.Frame):
             self.parent.destroy()
             import sys
             sys.exit(1)
-        self.parent.after(17, self.periodicCall)
+        self.parent.after(24, self.periodicCall)
 
 
 def ask_quit(self):
