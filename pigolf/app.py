@@ -90,7 +90,7 @@ class TabBar(tk.Frame):
                                      variable=self.var, anchor=tk.CENTER,
                                      borderwidth=0, cursor="hand1",
                                      background="black", highlightbackground="black",
-                                     activebackground="black", offrelief="FLAT", relief="FLAT")
+                                     activebackground="black", offrelief=FLAT, relief=FLAT)
         self.recBtn.image_ref = (self.recImg, self.stpImg)
         self.recBtn.pack()
 
