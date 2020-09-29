@@ -89,7 +89,7 @@ class TabBar(tk.Frame):
         self.stpImg = ImageTk.PhotoImage(Image.open("./images/recBtn-02.png"))
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg, selectimage=self.stpImg,
                                      indicatoron=0, variable=self.var,
-                                     anchor=tk.N, pady=(0, 20), cursor="hand1",
+                                     anchor=tk.N, pady=(0,20), cursor="hand1",
                                      relief=tk.FLAT, offrelief=tk.FLAT, borderwidth=0,
                                      background="black", highlightbackground="black",
                                      activebackground="black", selectcolor="black")
