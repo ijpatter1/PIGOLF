@@ -52,7 +52,8 @@ class Display():
         self.parent = parent
         self.window = self.parent.parent
         self.photo = None
-        self.canvas = tk.Canvas(self.window, width=self.parent.cam.width, height=self.parent.cam.height,
+        self.canvas = tk.Canvas(self.window,
+                                width=self.parent.cam.width, height=self.parent.cam.height,
                                 borderwidth=0)
         self.canvas.grid(row=0, column=0, columnspan=3)
 
@@ -93,7 +94,7 @@ class TabBar():
                                      background="black", highlightbackground="black",
                                      activebackground="black", selectcolor="black")
         self.recBtn.image_ref = (self.recImg, self.stpImg)
-        self.recBtn.grid(row=1, column=1)
+        self.recBtn.grid(row=1, column=1, sticky=tk.CENTER)
 
 
 class App(tk.Frame):
