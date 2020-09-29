@@ -124,7 +124,7 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                time.sleep(0.025)
+                time.sleep(0.024)
                 self.cam.camera.wait_recording()
                 frame = self.cam.getFrame()
                 self.queue.put(frame)
@@ -149,7 +149,7 @@ class App(tk.Frame):
             self.parent.destroy()
             import sys
             sys.exit(1)
-        self.parent.after(24, self.periodicCall)
+        self.parent.after(12, self.periodicCall)
 
 
 def ask_quit(self):
