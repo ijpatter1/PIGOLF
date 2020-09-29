@@ -138,7 +138,7 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                time.sleep(0.024)
+                # time.sleep(0.024)
                 self.cam.camera.wait_recording()
                 frame = self.cam.getFrame()
                 self.queue.put(frame)
@@ -150,7 +150,7 @@ class App(tk.Frame):
 
     def periodicCall(self):
         """
-        Check every 17 ms if there is something new in the queue.
+        Check every 1 ms if there is something new in the queue.
         :return:
         """
         self.display.processIncoming()
