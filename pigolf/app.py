@@ -17,7 +17,7 @@ class Camera:
         # initialize the camera
         self.camera = picamera.PiCamera()
         self.camera.resolution = (480, 640)
-        self.camera.framerate = 60
+        self.camera.framerate = 40
         self.width = 480
         self.height = 640
 
@@ -124,7 +124,7 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                time.sleep(0.017)
+                time.sleep(0.025)
                 self.cam.camera.wait_recording()
                 frame = self.cam.getFrame()
                 self.queue.put(frame)
