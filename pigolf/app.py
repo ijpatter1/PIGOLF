@@ -3,8 +3,7 @@ import queue
 import threading
 import tkinter as tk
 from tkinter import messagebox
-import PIL.Image
-import PIL.ImageTk
+import PIL
 import picamera
 from picamera.array import PiRGBArray
 
@@ -83,12 +82,11 @@ class TabBar(tk.Frame):
         self.window = self.parent.parent
 
         self.var = tk.IntVar()
-        self.recImg = tk.PhotoImage(file="./images/photo0.ppm")
-        self.stpImg = tk.PhotoImage(file="./images/photo1.ppm")
+        self.recImg = PIL.ImageTk.PhotoImage(PIL.Image.open("./images/photo0.png"))
+        self.stpImg = PIL.ImageTk.PhotoImage(PIL.Image.open("./images/photo1.png"))
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg,
                                      selectimage=self.stpImg, indicatoron=0,
                                      variable=self.var, anchor=tk.CENTER)
-        self.recBtn.configure(width=5, height=2)
         self.recBtn.image_ref = (self.recImg, self.stpImg)
         self.recBtn.pack()
 
