@@ -90,9 +90,9 @@ class TabBar():
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg, selectimage=self.stpImg,
                                      indicatoron=0, variable=self.var,
                                      borderwidth=0, cursor="hand1",
-                                     relief=tk.FLAT, offrelief=tk.FLAT,
-                                     background="black", highlightbackground="black",
-                                     activebackground="black", selectcolor="black")
+                                     relief=tk.FLAT, offrelief=tk.FLAT)
+                                     # background="black", highlightbackground="black",
+                                     # activebackground="black", selectcolor="black")
         self.recBtn.image_ref = (self.recImg, self.stpImg)
         self.recBtn.grid(row=1, column=1, pady=(5, 0))
 
@@ -102,7 +102,7 @@ class App(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         # define our parent frame config
         self.parent = parent
-        self.parent.configure(background="black", borderwidth=0)
+        self.parent.configure(borderwidth=0)
         self.parent.title("PIGOLF")
         # full screen app
         self.parent.attributes('-zoomed', True)
