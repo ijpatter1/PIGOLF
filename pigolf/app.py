@@ -35,7 +35,7 @@ class Camera:
             try:
                 self.camera.capture(output, format="rgb", use_video_port=True)
                 frame = output.array
-                output.truncate()
+                output.truncate(0)
                 msg = ['frame', frame]
                 # print("getFrame: msg sent")
                 return msg
