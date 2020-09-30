@@ -100,7 +100,7 @@ class TabBar:
                                         indicatoron=0, variable=self.reviewVar,
                                         cursor="hand1", height=3)
         self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
-        self.configBtn = tk.Checkbutton(self.window, text="CONFIG",
+        self.configBtn = tk.Checkbutton(self.window, text="CONFIG", command=show_config(self.parent),
                                         indicatoron=0, variable=self.reviewVar,
                                         cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
@@ -137,6 +137,7 @@ class App(tk.Frame):
         self.tbar = TabBar(self)
 
         self.config = Config(create_window(self))
+        self.config.parent.withdraw()
 
         self.running = 1
         self.currentFile = ""
@@ -189,14 +190,19 @@ class App(tk.Frame):
         self.parent.after(1, self.periodicCall)
 
 
+def ask_quit(self):
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        self.running = 0
+
+
 def create_window(self):
     window = tk.Toplevel(self.parent)
     return window
 
 
-def ask_quit(self):
-    if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        self.running = 0
+def show_config(parent):
+    parent.config.parent.deiconify()
+    return
 
 
 if __name__ == "__main__":
