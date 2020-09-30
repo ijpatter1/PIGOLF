@@ -41,7 +41,7 @@ class Camera:
                 self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=1)
                 frame = output.array
                 output.truncate(0)
-                disp_frame = ('disp_frame', frame)
+                disp_frame = ['disp_frame', frame]
                 # print("getFrame: msg sent")
                 return disp_frame
             finally:
@@ -52,7 +52,7 @@ class Camera:
                 self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=3)
                 frame = output.array
                 output.truncate(0)
-                rev_frame = ('rev_frame', frame)
+                rev_frame = ['rev_frame', frame]
                 # print("getFrame: msg sent")
                 return rev_frame
             finally:
@@ -117,8 +117,8 @@ class Review:
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
-        self.camera = self.app.cam.camera
-        self.camera.start_recording(self.camera.reviewStream, format='h264', resize=(1024, 768), splitter_port=3)
+        self.app.cam.camera.start_recording(self.app.cam.camera.reviewStream, format='h264',
+                                            resize=(1024, 768), splitter_port=3)
 
         self.revThread = threading.Thread(target=self.reviewThread)
         self.revThread.start()
@@ -260,10 +260,11 @@ def processIncoming(self):
         try:
             msg = self.queue.get(0)
             if msg[0] == 'disp_frame':
-                # print("processIncoming: inside if msg:")
+                print("processIncoming: inside if disp_frame:")
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             elif msg[0] == 'rev_frame':
+                print("processIncoming: inside if disp_frame:")
                 self.review.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.review.canvas.create_image(0, 0, image=self.review.frame, anchor=tk.NW)
             else:
