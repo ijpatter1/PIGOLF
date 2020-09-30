@@ -110,7 +110,7 @@ class Config:
         self.parent.configure(background="gray", borderwidth=0)
         self.parent.geometry("200x100+0+0")
         self.parent.title("CONFIG")
-        self.parent.protocol("WM_DELETE_WINDOW", lambda: hide_config(self.parent))
+        self.parent.protocol("WM_DELETE_WINDOW", lambda: hide_config(self))
 
         self.closeBtn = tk.Button(self.parent, text="Done")
         self.closeBtn.grid(row=0, column=0)
@@ -204,8 +204,9 @@ def show_config(mainapp):
     mainapp.config.parent.deiconify()
     return
 
-def hide_config(mainapp):
-    mainapp.config.parent.withdraw()
+
+def hide_config(window):
+    window.withdraw()
 
 
 if __name__ == "__main__":
