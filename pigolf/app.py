@@ -27,23 +27,27 @@ class Camera:
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
         self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
-        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
-        self.camera.start_recording(self.stream, format='h264')
+        # self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
+        # self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
         # print("getFrame: init")
         if source == "display":
             # print("getFrame: inside if")
             output = self.dispArray
-            try:
-                self.camera.capture(output, format="rgb", use_video_port=True)
-                frame = output.array
-                output.truncate(0)
-                msg = ['frame', frame]
-                # print("getFrame: msg sent")
-                return msg
-            finally:
-                pass
+        elif source == "review":
+            output = self.reviewArray
+        else:
+            return ['error', 'error']
+        try:
+            self.camera.capture(output, format="rgb", use_video_port=True)
+            frame = output.array
+            output.truncate(0)
+            msg = ['frame', frame]
+            # print("getFrame: msg sent")
+            return msg
+        finally:
+            pass
 
 
 class Display:
@@ -244,6 +248,9 @@ def processIncoming(self):
                 # print("processIncoming: inside if msg:")
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+            elif msg[0] == 'rev_frame':
+                self.review.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
+                self.review.canvas.create_image(0, 0, image=self.review.frame, anchor=tk.NW)
             else:
                 pass
         except self.queue.Empty:
