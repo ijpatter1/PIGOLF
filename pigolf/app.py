@@ -84,17 +84,21 @@ class TabBar:
         self.parent = parent
         self.window = self.parent.parent
 
-        self.var = tk.IntVar()
+        self.recVar = tk.IntVar()
+        self.reviewVar = tk.IntVar()
         self.recImg = ImageTk.PhotoImage(Image.open("./images/recBtn-01.png"))
         self.stpImg = ImageTk.PhotoImage(Image.open("./images/recBtn-02.png"))
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg, selectimage=self.stpImg,
-                                     indicatoron=0, variable=self.var,
+                                     indicatoron=0, variable=self.recVar,
                                      borderwidth=0, cursor="hand1",
                                      relief=tk.FLAT, offrelief=tk.FLAT,
                                      background="gray", highlightbackground="gray",
                                      activebackground="gray", selectcolor="gray")
-        # self.recBtn.image_ref = (self.recImg, self.stpImg)
         self.recBtn.grid(row=1, column=1, pady=(5, 0))
+        self.reviewBtn = tk.Checkbutton(self.window, text="REVIEW",
+                                        indicatoron=0, variable=self.reviewVar,
+                                        cursor="hand1")
+        self.reviewBtn.grid(row=1, column=3, pady=(5, 0))
 
 
 class App(tk.Frame):
