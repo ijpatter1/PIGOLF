@@ -25,7 +25,7 @@ class Camera:
         self.reviewHeight = 768
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
-        self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
+        # self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
         self.dispStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=1)
         # self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=3)
