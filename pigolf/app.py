@@ -96,12 +96,20 @@ class TabBar:
                                      background="gray", highlightbackground="gray",
                                      activebackground="gray", selectcolor="gray")
         self.recBtn.grid(row=1, column=1, pady=(5, 0))
-        self.reviewBtn = tk.Button(self.window, text="REVIEW",
+        self.reviewBtn = tk.Button(self.window, text="REVIEW", command=lambda: start_review(self.parent),
                                    cursor="hand1", height=3)
         self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
         self.configBtn = tk.Button(self.window, text="CONFIG", command=lambda: show_config(self.parent),
                                    cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
+
+
+class Review:
+    def __init__(self, parent):
+        self.parent = parent
+        self.parent.configure(background="gray", borderwidth=0)
+        self.parent.geometry("1024x768+480+0")
+        self.parent.title("REVIEW")
 
 
 class Config:
@@ -200,8 +208,14 @@ def create_window(self):
     return window
 
 
-def show_config(mainapp):
-    mainapp.config.parent.deiconify()
+def start_review(parent):
+    window = tk.Toplevel(parent.parent)
+    parent.review = Review(window)
+    return
+
+
+def show_config(parent):
+    parent.config.parent.deiconify()
     return
 
 
