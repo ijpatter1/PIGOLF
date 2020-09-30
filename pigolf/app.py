@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import ImageTk
 from PIL import Image
+import picamera
 import picamera.array as array
 
 
