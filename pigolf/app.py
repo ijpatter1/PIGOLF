@@ -243,7 +243,7 @@ def processIncoming(self):
             if msg[0] == 'frame':
                 # print("processIncoming: inside if msg:")
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
-                self.display.canvas.create_image(0, 0, image=self.frame, anchor=tk.NW)
+                self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             else:
                 pass
         except self.queue.Empty:
