@@ -99,7 +99,7 @@ class TabBar:
         self.reviewBtn = tk.Button(self.window, text="REVIEW",
                                    cursor="hand1", height=3)
         self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
-        self.configBtn = tk.Button(self.window, text="CONFIG",
+        self.configBtn = tk.Button(self.window, text="CONFIG", command=show_config(self.parent),
                                    cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
 
@@ -198,9 +198,9 @@ def create_window(self):
     return window
 
 
-# def show_config(mainapp):
-#     mainapp.config.parent.deiconify()
-#     return
+def show_config(mainapp):
+    mainapp.config.parent.deiconify()
+    return
 
 
 if __name__ == "__main__":
