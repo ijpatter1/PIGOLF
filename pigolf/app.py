@@ -116,6 +116,7 @@ class Review:
 
         self.app = mainapp
 
+        self.frame = None
         self.canvas = tk.Canvas(self.parent,
                                 width=self.app.cam.reviewWidth, height=self.app.cam.reviewHeight,
                                 borderwidth=0, highlightthickness=0)
@@ -125,7 +126,15 @@ class Review:
     #     self.revThread.start()
     #
     # def reviewThread(self):
-    #     pass
+    #     try:
+    #         while self.app.running:
+    #             # print("displayThread: inside while loop")
+    #             time.sleep(0.025)
+    #             self.app.cam.camera.wait_recording()
+    #             rev_frame = self.app.cam.getFrame("review")
+    #             self.app.queue.put(rev_frame)
+    #     finally:
+    #         return
 
 
 class Config:
