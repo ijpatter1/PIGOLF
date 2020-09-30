@@ -123,7 +123,7 @@ class App(tk.Frame):
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
         self.parent.geometry("476x730+0+0")
-        # self.parent.attributes('-zoomed', True)
+        self.parent.attributes('-zoomed', True)
         self.parent.title("PIGOLF")
 
         # This protocol method is a tkinter built-in method to catch if
@@ -206,7 +206,7 @@ def show_config(mainapp):
 
 
 def hide_config(window):
-    window.withdraw()
+    window.parent.withdraw()
 
 
 if __name__ == "__main__":
