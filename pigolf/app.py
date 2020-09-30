@@ -27,25 +27,25 @@ class Camera:
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
         # self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
-        self.dispStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=1)
+        self.dispStream = picamera.PiCameraCircularIO(self.camera, seconds=10)
         # self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=3)
 
-        self.camera.start_recording(self.dispStream, format='h264', splitter_port=1)
+        self.camera.start_recording(self.dispStream, format='h264')
 
     def getFrame(self, source):
         print("getFrame: init")
         if source == "display":
             print("getFrame: inside if Display")
             output = self.dispArray
-            # try:
-            self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=1)
-            frame = output.array
-            output.truncate(0)
-            disp_frame = ['disp_frame', frame]
-            print("getFrame: disp_frame sent")
-            return disp_frame
-        # finally:
-        # pass
+            try:
+                self.camera.capture(output, format="rgb", use_video_port=True)
+                frame = output.array
+                output.truncate(0)
+                disp_frame = ['disp_frame', frame]
+                print("getFrame: disp_frame sent")
+                return disp_frame
+            finally:
+                pass
         elif source == "review":
             print("getFrame: inside if review")
             output = self.reviewArray
@@ -199,7 +199,7 @@ class App(tk.Frame):
             while self.running:
                 # print("displayThread: inside while loop")
                 time.sleep(0.025)
-                self.cam.camera.wait_recording(splitter_port=1)
+                self.cam.camera.wait_recording()
                 frame = self.cam.getFrame("display")
                 self.queue.put(frame)
         finally:
