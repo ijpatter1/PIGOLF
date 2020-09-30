@@ -110,7 +110,6 @@ class TabBar:
 class Review:
     def __init__(self, parent, mainapp):
         self.parent = parent
-        self.window = self.parent.parent
         self.parent.configure(background="gray", borderwidth=0)
         self.parent.geometry("1024x768+480+0")
         self.parent.title("REVIEW")
