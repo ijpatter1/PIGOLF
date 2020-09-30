@@ -6,7 +6,6 @@ from tkinter import messagebox
 from PIL import ImageTk
 from PIL import Image
 import picamera
-from picamera.array import PiRGBArray
 
 
 class Camera:
@@ -21,17 +20,20 @@ class Camera:
         self.camera.framerate = 40
         self.width = 480
         self.height = 640
+        self.reviewWidth = 1024
+        self.reviewHeight = 768
 
-        self.rawCapture = PiRGBArray(self.camera, size=(self.width, self.height))
+        self.dispArray = picamera.array.PiRGBArray(self.camera, size=(self.width, self.height))
+        self.reviewArray = picamera.array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
         self.camera.start_recording(self.stream, format='h264')
 
-    def getFrame(self):
+    def getFrame(self, source):
         # print("getFrame: init")
-        if self.rawCapture:
+        if source == "display":
             # print("getFrame: inside if")
-            output = self.rawCapture
+            output = self.dispArray
             try:
                 self.camera.capture(output, format="rgb", use_video_port=True)
                 frame = output.array
@@ -51,7 +53,7 @@ class Display:
     def __init__(self, parent):
         self.parent = parent
         self.window = self.parent.parent
-        self.photo = None
+        self.frame = None
         self.canvas = tk.Canvas(self.window,
                                 width=self.parent.cam.width, height=self.parent.cam.height,
                                 borderwidth=0, highlightthickness=0)
@@ -69,8 +71,8 @@ class Display:
                 msg = self.parent.queue.get(0)
                 if msg[0] == 'frame':
                     # print("processIncoming: inside if msg:")
-                    self.photo = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
-                    self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
+                    self.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
+                    self.canvas.create_image(0, 0, image=self.frame, anchor=tk.NW)
                 else:
                     pass
             except self.parent.queue.Empty:
@@ -172,7 +174,7 @@ class App(tk.Frame):
                 # print("displayThread: inside while loop")
                 time.sleep(0.025)
                 self.cam.camera.wait_recording()
-                frame = self.cam.getFrame()
+                frame = self.cam.getFrame("display")
                 self.queue.put(frame)
         finally:
             return
