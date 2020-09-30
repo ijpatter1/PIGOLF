@@ -239,7 +239,7 @@ def processIncoming(self):
     while self.queue.qsize():
         # print("processIncoming: inside while loop")
         try:
-            msg = self.parent.queue.get(0)
+            msg = self.queue.get(0)
             if msg[0] == 'frame':
                 # print("processIncoming: inside if msg:")
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
