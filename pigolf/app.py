@@ -106,6 +106,16 @@ class TabBar:
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
 
 
+class Config:
+    def __init__(self, parent):
+        self.parent = parent
+        self.parent.configure(background="gray", borderwidth=0)
+        self.parent.geometry("200x100+50+50")
+        self.parent.title("CONFIG")
+        self.closeBtn = tk.Button(text="Done")
+        self.closeBtn.grid(row=0, column=0)
+
+
 class App(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -125,6 +135,9 @@ class App(tk.Frame):
 
         self.display = Display(self)
         self.tbar = TabBar(self)
+
+        self.newWindow = tk.Toplevel(self.parent)
+        self.config = Config(self.newWindow)
 
         self.running = 1
         self.currentFile = ""
