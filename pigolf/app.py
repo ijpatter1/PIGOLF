@@ -136,8 +136,7 @@ class App(tk.Frame):
         self.display = Display(self)
         self.tbar = TabBar(self)
 
-        self.newWindow = tk.Toplevel(self.parent)
-        self.config = Config(self.newWindow)
+        self.config = Config(create_window(self))
 
         self.running = 1
         self.currentFile = ""
@@ -188,6 +187,11 @@ class App(tk.Frame):
             import sys
             sys.exit(1)
         self.parent.after(1, self.periodicCall)
+
+
+def create_window(self):
+    window = tk.Toplevel(self.parent)
+    return window
 
 
 def ask_quit(self):
