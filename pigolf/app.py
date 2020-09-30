@@ -118,16 +118,16 @@ class Review:
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
-        # self.app.cam.camera.start_recording(self.app.cam.camera.reviewStream, format='h264',
-        #                                     resize=(1024, 768), splitter_port=3)
-        #
-        # self.revThread = threading.Thread(target=self.reviewThread)
-        # self.revThread.start()
+        self.app.cam.camera.start_recording(self.app.cam.camera.reviewStream, format='h264',
+                                            resize=(1024, 768), splitter_port=3)
+
+        self.revThread = threading.Thread(target=self.reviewThread)
+        self.revThread.start()
 
     def reviewThread(self):
         try:
             while self.app.running:
-                # print("displayThread: inside while loop")
+                print("displayThread: inside while loop")
                 time.sleep(0.025)
                 self.app.cam.camera.wait_recording(splitter_port=3)
                 rev_frame = self.app.cam.getFrame("review")
