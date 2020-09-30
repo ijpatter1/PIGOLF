@@ -108,15 +108,17 @@ class TabBar:
 
 
 class Review:
-    def __init__(self, parent):
+    def __init__(self, parent, mainapp):
         self.parent = parent
         self.window = self.parent.parent
         self.parent.configure(background="gray", borderwidth=0)
         self.parent.geometry("1024x768+480+0")
         self.parent.title("REVIEW")
 
+        self.app = mainapp
+
         self.canvas = tk.Canvas(self.parent,
-                                width=self.window.app.cam.reviewWidth, height=self.window.app.cam.reviewHeight,
+                                width=self.app.cam.reviewWidth, height=self.app.cam.reviewHeight,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
@@ -128,12 +130,14 @@ class Review:
 
 
 class Config:
-    def __init__(self, parent):
+    def __init__(self, parent, mainapp):
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
         self.parent.geometry("200x100+140+350")
         self.parent.title("CONFIG")
         self.parent.protocol("WM_DELETE_WINDOW", lambda: hide_config(self))
+
+        self.app = mainapp
 
         self.closeBtn = tk.Button(self.parent, text="Done", command=lambda: hide_config(self))
         self.closeBtn.grid(row=0, column=0)
@@ -159,8 +163,10 @@ class App(tk.Frame):
         self.display = Display(self)
         self.tbar = TabBar(self)
 
-        self.config = Config(create_window(self))
+        self.config = Config(create_window(self), self)
         self.config.parent.withdraw()
+
+        self.review = None
 
         self.running = 1
         self.currentFile = ""
@@ -223,19 +229,18 @@ def create_window(self):
     return window
 
 
-def start_review(parent):
-    window = tk.Toplevel(parent.parent)
-    parent.review = Review(window)
+def start_review(self):
+    self.review = Review(create_window(self), self)
     return
 
 
-def show_config(parent):
-    parent.config.parent.deiconify()
+def show_config(self):
+    self.config.parent.deiconify()
     return
 
 
-def hide_config(window):
-    window.parent.withdraw()
+def hide_config(self):
+    self.parent.withdraw()
 
 
 if __name__ == "__main__":
