@@ -79,7 +79,7 @@ class Display:
                 pass
 
 
-class TabBar():
+class TabBar:
     def __init__(self, parent):
         self.parent = parent
         self.window = self.parent.parent
@@ -93,10 +93,8 @@ class TabBar():
                                      relief=tk.FLAT, offrelief=tk.FLAT,
                                      background="gray", highlightbackground="gray",
                                      activebackground="gray", selectcolor="gray")
+        # self.recBtn.image_ref = (self.recImg, self.stpImg)
         self.recBtn.grid(row=1, column=1, pady=(5, 0))
-
-
-class
 
 
 class App(tk.Frame):
