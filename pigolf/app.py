@@ -98,11 +98,11 @@ class TabBar:
         self.recBtn.grid(row=1, column=1, pady=(5, 0))
         self.reviewBtn = tk.Checkbutton(self.window, text="REVIEW",
                                         indicatoron=0, variable=self.reviewVar,
-                                        cursor="hand1", height=5)
+                                        cursor="hand1", height=3)
         self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
         self.configBtn = tk.Checkbutton(self.window, text="CONFIG",
                                         indicatoron=0, variable=self.reviewVar,
-                                        cursor="hand1", height=5)
+                                        cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
 
 
