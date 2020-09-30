@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import ImageTk
 from PIL import Image
-import picamera
+import picamera.array as array
 
 
 class Camera:
@@ -23,8 +23,8 @@ class Camera:
         self.reviewWidth = 1024
         self.reviewHeight = 768
 
-        self.dispArray = picamera.array.PiRGBArray(self.camera, size=(self.width, self.height))
-        self.reviewArray = picamera.array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
+        self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
+        self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
         self.camera.start_recording(self.stream, format='h264')
