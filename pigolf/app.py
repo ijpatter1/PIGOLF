@@ -27,8 +27,8 @@ class Camera:
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
         self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
-        # self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
-        # self.camera.start_recording(self.stream, format='h264')
+        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
+        self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
         # print("getFrame: init")
