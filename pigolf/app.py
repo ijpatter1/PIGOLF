@@ -25,24 +25,24 @@ class Camera:
         self.reviewHeight = 768
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
-        # self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
+        self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
         self.dispStream = picamera.PiCameraCircularIO(self.camera, seconds=10)
-        # self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=3)
+        self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=3)
 
         self.camera.start_recording(self.dispStream, format='h264')
 
     def getFrame(self, source):
-        print("getFrame: init")
+        # print("getFrame: init")
         if source == "display":
-            print("getFrame: inside if Display")
+            # print("getFrame: inside if Display")
             output = self.dispArray
             try:
                 self.camera.capture(output, format="rgb", use_video_port=True)
                 frame = output.array
                 output.truncate(0)
                 disp_frame = ['disp_frame', frame]
-                print("getFrame: disp_frame sent")
+                # print("getFrame: disp_frame sent")
                 return disp_frame
             finally:
                 pass
@@ -261,7 +261,7 @@ def processIncoming(self):
         try:
             msg = self.queue.get(0)
             if msg[0] == 'disp_frame':
-                print("processIncoming: inside if disp_frame:")
+                # print("processIncoming: inside if disp_frame:")
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             elif msg[0] == 'rev_frame':
