@@ -100,7 +100,7 @@ class TabBar:
                                         indicatoron=0, variable=self.reviewVar,
                                         cursor="hand1", height=3)
         self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
-        self.configBtn = tk.Checkbutton(self.window, text="CONFIG", command=show_config(self.parent),
+        self.configBtn = tk.Checkbutton(self.window, text="CONFIG", command=show_config(self),
                                         indicatoron=0, variable=self.reviewVar,
                                         cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
@@ -200,8 +200,8 @@ def create_window(self):
     return window
 
 
-def show_config(parent):
-    parent.config.parent.deiconify()
+def show_config(self):
+    self.parent.config.parent.deiconify()
     return
 
 
