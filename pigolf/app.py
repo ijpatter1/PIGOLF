@@ -60,27 +60,6 @@ class Display:
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0, columnspan=3)
 
-    def processIncoming(self):
-        """
-        Handle all messages currently in the queue, if any.
-        :return:
-        """
-        # print("processIncoming: init")
-        while self.parent.queue.qsize():
-            # print("processIncoming: inside while loop")
-            try:
-                msg = self.parent.queue.get(0)
-                if msg[0] == 'frame':
-                    # print("processIncoming: inside if msg:")
-                    self.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
-                    self.canvas.create_image(0, 0, image=self.frame, anchor=tk.NW)
-                else:
-                    pass
-            except self.parent.queue.Empty:
-                # just on general principles, although we don't
-                # expect this branch to ever be taken
-                pass
-
 
 class TabBar:
     def __init__(self, parent):
@@ -214,7 +193,7 @@ class App(tk.Frame):
         Check every 1 ms if there is something new in the queue.
         :return:
         """
-        self.display.processIncoming()
+        processIncoming(self)
         if not self.running:
             # This is the brutal stop of the system. I may want to do
             # some more cleanup before actually shutting it down.
@@ -249,6 +228,28 @@ def show_config(self):
 
 def hide_config(self):
     self.parent.withdraw()
+
+
+def processIncoming(self):
+    """
+    Handle all messages currently in the queue, if any.
+    :return:
+    """
+    # print("processIncoming: init")
+    while self.queue.qsize():
+        # print("processIncoming: inside while loop")
+        try:
+            msg = self.parent.queue.get(0)
+            if msg[0] == 'frame':
+                # print("processIncoming: inside if msg:")
+                self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
+                self.display.canvas.create_image(0, 0, image=self.frame, anchor=tk.NW)
+            else:
+                pass
+        except self.queue.Empty:
+            # just on general principles, although we don't
+            # expect this branch to ever be taken
+            pass
 
 
 if __name__ == "__main__":
