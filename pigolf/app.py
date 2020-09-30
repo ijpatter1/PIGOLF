@@ -31,6 +31,7 @@ class Camera:
         self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=3)
 
         self.camera.start_recording(self.dispStream, format='h264')
+        self.camera.start_recording(self.reviewStream, format='h264', splitter_port=3)
 
     def getFrame(self, source):
         # print("getFrame: init")
@@ -117,9 +118,6 @@ class Review:
                                 width=self.app.cam.reviewWidth, height=self.app.cam.reviewHeight,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
-
-        self.app.cam.camera.start_recording(self.app.cam.camera.reviewStream, format='h264',
-                                            resize=(1024, 768), splitter_port=3)
 
         self.revThread = threading.Thread(target=self.reviewThread)
         self.revThread.start()
