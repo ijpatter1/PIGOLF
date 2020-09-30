@@ -37,15 +37,15 @@ class Camera:
         if source == "display":
             print("getFrame: inside if Display")
             output = self.dispArray
-            try:
-                self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=1)
-                frame = output.array
-                output.truncate(0)
-                disp_frame = ['disp_frame', frame]
-                print("getFrame: disp_frame sent")
-                return disp_frame
-            finally:
-                pass
+            # try:
+            self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=1)
+            frame = output.array
+            output.truncate(0)
+            disp_frame = ['disp_frame', frame]
+            print("getFrame: disp_frame sent")
+            return disp_frame
+        # finally:
+        # pass
         elif source == "review":
             print("getFrame: inside if review")
             output = self.reviewArray
