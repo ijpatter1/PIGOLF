@@ -28,32 +28,33 @@ class Camera:
         self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
         self.dispStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=1)
-        self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=3)
+        # self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=3)
 
         self.camera.start_recording(self.dispStream, format='h264', splitter_port=1)
 
     def getFrame(self, source):
-        # print("getFrame: init")
+        print("getFrame: init")
         if source == "display":
-            # print("getFrame: inside if")
+            print("getFrame: inside if Display")
             output = self.dispArray
             try:
                 self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=1)
                 frame = output.array
                 output.truncate(0)
                 disp_frame = ['disp_frame', frame]
-                # print("getFrame: msg sent")
+                print("getFrame: disp_frame sent")
                 return disp_frame
             finally:
                 pass
         elif source == "review":
+            print("getFrame: inside if review")
             output = self.reviewArray
             try:
                 self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=3)
                 frame = output.array
                 output.truncate(0)
                 rev_frame = ['rev_frame', frame]
-                # print("getFrame: msg sent")
+                print("getFrame: rev_frame sent")
                 return rev_frame
             finally:
                 pass
@@ -117,11 +118,11 @@ class Review:
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
-        self.app.cam.camera.start_recording(self.app.cam.camera.reviewStream, format='h264',
-                                            resize=(1024, 768), splitter_port=3)
-
-        self.revThread = threading.Thread(target=self.reviewThread)
-        self.revThread.start()
+        # self.app.cam.camera.start_recording(self.app.cam.camera.reviewStream, format='h264',
+        #                                     resize=(1024, 768), splitter_port=3)
+        #
+        # self.revThread = threading.Thread(target=self.reviewThread)
+        # self.revThread.start()
 
     def reviewThread(self):
         try:
@@ -264,7 +265,7 @@ def processIncoming(self):
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             elif msg[0] == 'rev_frame':
-                print("processIncoming: inside if disp_frame:")
+                print("processIncoming: inside if rev_frame:")
                 self.review.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.review.canvas.create_image(0, 0, image=self.review.frame, anchor=tk.NW)
             else:
