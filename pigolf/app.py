@@ -108,7 +108,7 @@ class Config:
     def __init__(self, parent):
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry("200x100+240+400")
+        self.parent.geometry("200x100+140+350")
         self.parent.title("CONFIG")
         self.parent.protocol("WM_DELETE_WINDOW", lambda: hide_config(self))
 
