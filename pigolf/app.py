@@ -111,6 +111,7 @@ class Config:
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
         self.parent.geometry("200x100+50+50")
+        self.parent.attributes('-zoomed', True)
         self.parent.title("CONFIG")
         self.closeBtn = tk.Button(self.parent, text="Done")
         self.closeBtn.grid(row=0, column=0)
