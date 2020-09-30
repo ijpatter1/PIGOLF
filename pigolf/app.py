@@ -114,6 +114,17 @@ class Review:
         self.parent.geometry("1024x768+480+0")
         self.parent.title("REVIEW")
 
+        self.canvas = tk.Canvas(self.parent,
+                                width=self.parent.app.cam.reviewWidth, height=self.parent.app.cam.reviewHeight,
+                                borderwidth=0, highlightthickness=0)
+        self.canvas.grid(row=0, column=0)
+
+    #     self.revThread = threading.Thread(target=self.reviewThread)
+    #     self.revThread.start()
+    #
+    # def reviewThread(self):
+    #     pass
+
 
 class Config:
     def __init__(self, parent):
