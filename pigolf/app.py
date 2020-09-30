@@ -27,27 +27,39 @@ class Camera:
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
         self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
-        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
-        self.camera.start_recording(self.stream, format='h264')
+        self.dispStream = picamera.PiCameraCircularIO(self.camera, seconds=10)
+        self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10)
+
+        self.camera.start_recording(self.dispStream, format='h264', splitter_port=1)
 
     def getFrame(self, source):
         # print("getFrame: init")
         if source == "display":
             # print("getFrame: inside if")
             output = self.dispArray
+            try:
+                self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=1)
+                frame = output.array
+                output.truncate(0)
+                disp_frame = ('disp_frame', frame)
+                # print("getFrame: msg sent")
+                return disp_frame
+            finally:
+                pass
         elif source == "review":
             output = self.reviewArray
+            try:
+                self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=3)
+                frame = output.array
+                output.truncate(0)
+                rev_frame = ('rev_frame', frame)
+                # print("getFrame: msg sent")
+                return rev_frame
+            finally:
+                pass
         else:
-            return ['error', 'error']
-        try:
-            self.camera.capture(output, format="rgb", use_video_port=True)
-            frame = output.array
-            output.truncate(0)
-            msg = ['frame', frame]
-            # print("getFrame: msg sent")
-            return msg
-        finally:
-            pass
+            err_msg = ('error', 'error')
+            return err_msg
 
 
 class Display:
@@ -105,19 +117,22 @@ class Review:
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
-    #     self.revThread = threading.Thread(target=self.reviewThread)
-    #     self.revThread.start()
-    #
-    # def reviewThread(self):
-    #     try:
-    #         while self.app.running:
-    #             # print("displayThread: inside while loop")
-    #             time.sleep(0.025)
-    #             self.app.cam.camera.wait_recording()
-    #             rev_frame = self.app.cam.getFrame("review")
-    #             self.app.queue.put(rev_frame)
-    #     finally:
-    #         return
+        self.camera = self.app.cam.camera
+        self.camera.start_recording(self.camera.reviewStream, format='h264', resize=(1024, 768), splitter_port=3)
+
+        self.revThread = threading.Thread(target=self.reviewThread)
+        self.revThread.start()
+
+    def reviewThread(self):
+        try:
+            while self.app.running:
+                # print("displayThread: inside while loop")
+                time.sleep(0.025)
+                self.app.cam.camera.wait_recording(splitter_port=3)
+                rev_frame = self.app.cam.getFrame("review")
+                self.app.queue.put(rev_frame)
+        finally:
+            return
 
 
 class Config:
@@ -183,7 +198,7 @@ class App(tk.Frame):
             while self.running:
                 # print("displayThread: inside while loop")
                 time.sleep(0.025)
-                self.cam.camera.wait_recording()
+                self.cam.camera.wait_recording(splitter_port=1)
                 frame = self.cam.getFrame("display")
                 self.queue.put(frame)
         finally:
@@ -244,7 +259,7 @@ def processIncoming(self):
         # print("processIncoming: inside while loop")
         try:
             msg = self.queue.get(0)
-            if msg[0] == 'frame':
+            if msg[0] == 'disp_frame':
                 # print("processIncoming: inside if msg:")
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
