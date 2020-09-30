@@ -99,7 +99,7 @@ class TabBar:
         self.reviewBtn = tk.Button(self.window, text="REVIEW",
                                    cursor="hand1", height=3)
         self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
-        self.configBtn = tk.Button(self.window, text="CONFIG", command=show_config(self.parent),
+        self.configBtn = tk.Button(self.window, text="CONFIG", command=lambda: show_config(self.parent),
                                    cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
 
