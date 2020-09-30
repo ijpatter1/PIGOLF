@@ -112,7 +112,7 @@ class Config:
         self.parent.title("CONFIG")
         self.parent.protocol("WM_DELETE_WINDOW", lambda: hide_config(self))
 
-        self.closeBtn = tk.Button(self.parent, text="Done")
+        self.closeBtn = tk.Button(self.parent, text="Done", command=lambda: hide_config(self))
         self.closeBtn.grid(row=0, column=0)
 
 
