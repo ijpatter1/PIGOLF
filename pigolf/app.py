@@ -98,7 +98,7 @@ class TabBar:
         self.reviewBtn = tk.Checkbutton(self.window, text="REVIEW",
                                         indicatoron=0, variable=self.reviewVar,
                                         cursor="hand1")
-        self.reviewBtn.grid(row=1, column=3, pady=(5, 0))
+        self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
 
 
 class App(tk.Frame):
