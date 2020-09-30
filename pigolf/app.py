@@ -96,13 +96,11 @@ class TabBar:
                                      background="gray", highlightbackground="gray",
                                      activebackground="gray", selectcolor="gray")
         self.recBtn.grid(row=1, column=1, pady=(5, 0))
-        self.reviewBtn = tk.Checkbutton(self.window, text="REVIEW",
-                                        indicatoron=0, variable=self.reviewVar,
-                                        cursor="hand1", height=3)
+        self.reviewBtn = tk.Button(self.window, text="REVIEW",
+                                   cursor="hand1", height=3)
         self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
-        self.configBtn = tk.Checkbutton(self.window, text="CONFIG",
-                                        indicatoron=0, variable=self.reviewVar,
-                                        cursor="hand1", height=3)
+        self.configBtn = tk.Button(self.window, text="CONFIG",
+                                   cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
 
 
