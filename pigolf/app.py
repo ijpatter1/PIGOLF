@@ -148,7 +148,7 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                time.sleep(0.010)
+                # time.sleep(0.010)
                 self.cam.camera.wait_recording()
                 disp_frame = self.cam.getFrame("display")
                 self.queue.put(disp_frame)
@@ -163,8 +163,6 @@ class App(tk.Frame):
         Check every 1 ms if there is something new in the queue.
         :return:
         """
-        if self.queue.qsize():
-            processIncoming(self)
         if not self.running:
             # This is the brutal stop of the system. I may want to do
             # some more cleanup before actually shutting it down.
@@ -174,6 +172,8 @@ class App(tk.Frame):
             self.parent.destroy()
             import sys
             sys.exit(1)
+        if self.queue.qsize():
+            processIncoming(self)
         self.parent.after(1, self.periodicCall)
 
 
