@@ -18,13 +18,12 @@ class Camera:
         # initialize the camera
         self.camera = picamera.PiCamera()
         self.camera.resolution = (640, 480)
-        self.camera.framerate = 90
+        self.camera.framerate = 120
         self.camera.hflip = True
-        # self.camera.vflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(640, 480))
 
-        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
+        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=5)
 
         self.camera.start_recording(self.stream, format='h264')
 
@@ -148,7 +147,7 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                # time.sleep(0.010)
+                time.sleep(0.025)
                 self.cam.camera.wait_recording()
                 disp_frame = self.cam.getFrame("display")
                 self.queue.put(disp_frame)
