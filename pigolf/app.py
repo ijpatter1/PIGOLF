@@ -17,21 +17,19 @@ class Camera:
     def __init__(self):
         # initialize the camera
         self.camera = picamera.PiCamera()
-        self.camera.resolution = (480, 640)
+        self.camera.resolution = (1024, 768)
         self.camera.framerate = 40
-        self.width = 480
-        self.height = 640
+        self.dispWidth = 480
+        self.dispHeight = 640
         self.reviewWidth = 1024
         self.reviewHeight = 768
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
+        self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
         self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewHeight, self.reviewHeight))
 
-        self.dispStream = picamera.PiCameraCircularIO(self.camera, seconds=10)
-        self.reviewStream = picamera.PiCameraCircularIO(self.camera, seconds=10, splitter_port=3)
+        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
 
-        self.camera.start_recording(self.dispStream, format='h264')
-        self.camera.start_recording(self.reviewStream, format='h264', splitter_port=3)
+        self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
         # print("getFrame: init")
@@ -39,7 +37,7 @@ class Camera:
             # print("getFrame: inside if Display")
             output = self.dispArray
             try:
-                self.camera.capture(output, format="rgb", use_video_port=True)
+                self.camera.capture(output, format="rgb", use_video_port=True, resize=(self.dispWidth, self.dispHeight))
                 frame = output.array
                 output.truncate(0)
                 disp_frame = ['disp_frame', frame]
@@ -51,7 +49,7 @@ class Camera:
             print("getFrame: inside if review")
             output = self.reviewArray
             try:
-                self.camera.capture(output, format="rgb", use_video_port=True, splitter_port=3)
+                self.camera.capture(output, format="rgb", use_video_port=True)
                 frame = output.array
                 output.truncate(0)
                 rev_frame = ['rev_frame', frame]
@@ -74,7 +72,7 @@ class Display:
         self.window = self.parent.parent
         self.frame = None
         self.canvas = tk.Canvas(self.window,
-                                width=self.parent.cam.width, height=self.parent.cam.height,
+                                width=self.parent.cam.dispWidth, height=self.parent.cam.dispHeight,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0, columnspan=3)
 
@@ -125,7 +123,7 @@ class Review:
     def reviewThread(self):
         try:
             while self.app.running:
-                print("displayThread: inside while loop")
+                print("reviewThread: inside while loop")
                 time.sleep(0.025)
                 self.app.cam.camera.wait_recording(splitter_port=3)
                 rev_frame = self.app.cam.getFrame("review")
