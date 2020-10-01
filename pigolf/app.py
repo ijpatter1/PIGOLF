@@ -29,17 +29,17 @@ class Camera:
         self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
-        print("getFrame: init")
+        # print("getFrame: init")
         if source == "display":
-            print("getFrame: inside if Display")
+            # print("getFrame: inside if Display")
             disp_output = self.dispArray
             try:
-                print("getFrame: before display capture")
+                # print("getFrame: before display capture")
                 self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
-                print("getFrame: frame returned")
+                # print("getFrame: frame returned")
                 return disp_frame
             finally:
                 pass
@@ -203,9 +203,9 @@ def processIncoming(self):
         try:
             msg = self.queue.get(0)
             if msg[0] == 'disp_frame':
-                print("processIncoming: inside if disp_frame:")
+                # print("processIncoming: inside if disp_frame:")
                 self.display.image = Image.fromarray(msg[1])
-                self.display.image.rotate(90)
+                # self.display.image.rotate(90)
                 self.display.frame = ImageTk.PhotoImage(image=self.display.image)
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             else:
