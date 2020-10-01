@@ -49,7 +49,9 @@ class Camera:
             print("getFrame: inside if review")
             output = self.reviewArray
             try:
+                print("getFrame: before capture")
                 self.camera.capture(output, format="rgb", use_video_port=True)
+                print("getFrame: after capture")
                 frame = output.array
                 output.truncate(0)
                 rev_frame = ['rev_frame', frame]
