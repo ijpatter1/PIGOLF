@@ -57,7 +57,8 @@ class Display:
         self.window = self.parent.parent
         self.dispWidth = 480
         self.dispHeight = 640
-        self.image = None
+        self.inputImage = None
+        self.outputImage = None
         self.frame = None
         self.canvas = tk.Canvas(self.window,
                                 width=self.dispWidth, height=self.dispHeight,
@@ -205,8 +206,8 @@ def processIncoming(self):
             msg = self.queue.get(0)
             if msg[0] == 'disp_frame':
                 # print("processIncoming: inside if disp_frame:")
-                self.display.image = Image.fromarray(msg[1])
-                self.display.image.rotate(90, expand=1)
+                self.display.inputImage = Image.fromarray(msg[1])
+                self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
                 self.display.frame = ImageTk.PhotoImage(image=self.display.image)
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             else:
