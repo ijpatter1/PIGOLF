@@ -20,10 +20,8 @@ class Camera:
         self.camera.resolution = (640, 480)
         self.camera.framerate = 90
         self.camera.rotation = 90
-        self.dispWidth = 480
-        self.dispHeight = 640
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
+        self.dispArray = array.PiRGBArray(self.camera, size=(640, 480))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
 
@@ -36,8 +34,7 @@ class Camera:
             disp_output = self.dispArray
             try:
                 # print("getFrame: before display capture")
-                self.camera.capture(disp_output, format="rgb", use_video_port=True,
-                                    resize=(480, 640))
+                self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
@@ -58,10 +55,12 @@ class Display:
     def __init__(self, parent):
         self.parent = parent
         self.window = self.parent.parent
+        self.dispWidth = 480
+        self.dispHeight = 640
         self.image = None
         self.frame = None
         self.canvas = tk.Canvas(self.window,
-                                width=self.parent.cam.dispWidth, height=self.parent.cam.dispHeight,
+                                width=self.dispWidth, height=self.dispHeight,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0, columnspan=3)
 
@@ -207,7 +206,7 @@ def processIncoming(self):
             if msg[0] == 'disp_frame':
                 # print("processIncoming: inside if disp_frame:")
                 self.display.image = Image.fromarray(msg[1])
-                # self.display.image.rotate(90)
+                self.display.image.rotate(90, expand=1)
                 self.display.frame = ImageTk.PhotoImage(image=self.display.image)
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             else:
