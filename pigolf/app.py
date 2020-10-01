@@ -148,8 +148,8 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                time.sleep(0.01)
-                # self.cam.camera.wait_recording()
+                time.sleep(0.010)
+                self.cam.camera.wait_recording()
                 disp_frame = self.cam.getFrame("display")
                 self.queue.put(disp_frame)
         finally:
@@ -163,7 +163,8 @@ class App(tk.Frame):
         Check every 1 ms if there is something new in the queue.
         :return:
         """
-        processIncoming(self)
+        if self.queue.qsize():
+            processIncoming(self)
         if not self.running:
             # This is the brutal stop of the system. I may want to do
             # some more cleanup before actually shutting it down.
@@ -201,22 +202,20 @@ def processIncoming(self):
     :return:
     """
     # print("processIncoming: init")
-    while self.queue.qsize():
-        # print("processIncoming: inside while loop")
-        try:
-            msg = self.queue.get(0)
-            if msg[0] == 'disp_frame':
-                # print("processIncoming: inside if disp_frame:")
-                self.display.inputImage = Image.fromarray(msg[1])
-                self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
-                self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
-                self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-            else:
-                pass
-        except self.queue.Empty:
-            # just on general principles, although we don't
-            # expect this branch to ever be taken
+    try:
+        msg = self.queue.get(0)
+        if msg[0] == 'disp_frame':
+            # print("processIncoming: inside if disp_frame:")
+            self.display.inputImage = Image.fromarray(msg[1])
+            self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
+            self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
+            self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        else:
             pass
+    except self.queue.Empty:
+        # just on general principles, although we don't
+        # expect this branch to ever be taken
+        pass
 
 
 if __name__ == "__main__":
