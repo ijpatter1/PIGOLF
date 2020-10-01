@@ -19,7 +19,6 @@ class Camera:
         self.camera = picamera.PiCamera()
         self.camera.resolution = (640, 480)
         self.camera.framerate = 90
-        self.camera.rotation = 90
 
         self.dispArray = array.PiRGBArray(self.camera, size=(480, 640))
 
