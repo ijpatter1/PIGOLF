@@ -32,33 +32,41 @@ class Camera:
         self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
-        # print("getFrame: init")
+        print("getFrame: init")
         if source == "display":
-            # print("getFrame: inside if Display")
+            print("getFrame: inside if Display")
             disp_output = self.dispArray
+            rev_output = self.reviewArray
             try:
-                self.camera.capture(disp_output, format="rgb", use_video_port=True, resize=(self.dispWidth, self.dispHeight))
-                frame = disp_output.array
+                print("getFrame: before display capture")
+                self.camera.capture(disp_output, format="rgb", use_video_port=True,
+                                    resize=(self.dispWidth, self.dispHeight))
+                print("getFrame: before review capture")
+                self.camera.capture(rev_output, format="rgb", use_video_port=True)
+                disp_frame = disp_output.array
+                rev_frame = rev_output.array
                 disp_output.truncate(0)
-                disp_frame = ['disp_frame', frame]
-                # print("getFrame: disp_frame sent")
-                return disp_frame
+                rev_output.truncate(0)
+                disp_frame = ['disp_frame', disp_frame]
+                rev_frame = ['rev_frame', rev_frame]
+                print("getFrame: frames returned")
+                return disp_frame, rev_frame
             finally:
                 pass
-        elif source == "review":
-            print("getFrame: inside if review")
-            review_output = self.reviewArray
-            try:
-                print("getFrame: before capture")
-                self.camera.capture(review_output, format="rgb", use_video_port=True)
-                print("getFrame: after capture")
-                frame = review_output.array
-                review_output.truncate(0)
-                rev_frame = ['rev_frame', frame]
-                print("getFrame: rev_frame sent")
-                return rev_frame
-            finally:
-                pass
+        # elif source == "review":
+        #     print("getFrame: inside if review")
+        #     review_output = self.reviewArray
+        #     try:
+        #         print("getFrame: before capture")
+        #         self.camera.capture(review_output, format="rgb", use_video_port=True)
+        #         print("getFrame: after capture")
+        #         frame = review_output.array
+        #         review_output.truncate(0)
+        #         rev_frame = ['rev_frame', frame]
+        #         print("getFrame: rev_frame sent")
+        #         return rev_frame
+        #     finally:
+        #         pass
         else:
             err_msg = ('error', 'error')
             return err_msg
@@ -119,19 +127,19 @@ class Review:
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
-        self.revThread = threading.Thread(target=self.reviewThread)
-        self.revThread.start()
-
-    def reviewThread(self):
-        try:
-            while self.app.running:
-                print("reviewThread: inside while loop")
-                time.sleep(0.025)
-                self.app.cam.camera.wait_recording()
-                rev_frame = self.app.cam.getFrame("review")
-                self.app.queue.put(rev_frame)
-        finally:
-            return
+    #     self.revThread = threading.Thread(target=self.reviewThread)
+    #     self.revThread.start()
+    #
+    # def reviewThread(self):
+    #     try:
+    #         while self.app.running:
+    #             print("reviewThread: inside while loop")
+    #             time.sleep(0.025)
+    #             self.app.cam.camera.wait_recording()
+    #             rev_frame = self.app.cam.getFrame("review")
+    #             self.app.queue.put(rev_frame)
+    #     finally:
+    #         return
 
 
 class Config:
@@ -198,8 +206,9 @@ class App(tk.Frame):
                 # print("displayThread: inside while loop")
                 time.sleep(0.025)
                 self.cam.camera.wait_recording()
-                frame = self.cam.getFrame("display")
-                self.queue.put(frame)
+                disp_frame, rev_frame = self.cam.getFrame("display")
+                self.queue.put(disp_frame)
+                self.queue.put(rev_frame)
         finally:
             return
 
@@ -263,9 +272,10 @@ def processIncoming(self):
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             elif msg[0] == 'rev_frame':
-                print("processIncoming: inside if rev_frame:")
-                self.review.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
-                self.review.canvas.create_image(0, 0, image=self.review.frame, anchor=tk.NW)
+                if self.review:
+                    print("processIncoming: inside if rev_frame:")
+                    self.review.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
+                    self.review.canvas.create_image(0, 0, image=self.review.frame, anchor=tk.NW)
             else:
                 pass
         except self.queue.Empty:
