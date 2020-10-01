@@ -20,8 +20,8 @@ class Camera:
         self.camera.resolution = (640, 480)
         self.camera.framerate = 90
         self.camera.rotation = 90
-        self.dispWidth = 640
-        self.dispHeight = 480
+        self.dispWidth = 480
+        self.dispHeight = 640
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
 
@@ -36,7 +36,8 @@ class Camera:
             disp_output = self.dispArray
             try:
                 # print("getFrame: before display capture")
-                self.camera.capture(disp_output, format="rgb", use_video_port=True)
+                self.camera.capture(disp_output, format="rgb", use_video_port=True,
+                                    resize=(480, 640))
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
@@ -60,7 +61,7 @@ class Display:
         self.image = None
         self.frame = None
         self.canvas = tk.Canvas(self.window,
-                                width=self.parent.cam.dispHeight, height=self.parent.cam.dispWidth,
+                                width=self.parent.cam.dispWidth, height=self.parent.cam.dispHeight,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0, columnspan=3)
 
