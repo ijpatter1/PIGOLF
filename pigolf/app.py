@@ -17,15 +17,12 @@ class Camera:
     def __init__(self):
         # initialize the camera
         self.camera = picamera.PiCamera()
-        self.camera.resolution = (1024, 768)
-        self.camera.framerate = 40
-        self.dispWidth = 480
-        self.dispHeight = 640
-        self.reviewWidth = 1024
-        self.reviewHeight = 768
+        self.camera.resolution = (640, 480)
+        self.camera.framerate = 90
+        self.dispWidth = 640
+        self.dispHeight = 480
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
-        self.reviewArray = array.PiRGBArray(self.camera, size=(self.reviewWidth, self.reviewHeight))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
 
@@ -36,37 +33,16 @@ class Camera:
         if source == "display":
             print("getFrame: inside if Display")
             disp_output = self.dispArray
-            rev_output = self.reviewArray
             try:
                 print("getFrame: before display capture")
-                self.camera.capture(disp_output, format="rgb", use_video_port=True,
-                                    resize=(self.dispWidth, self.dispHeight))
-                print("getFrame: before review capture")
-                self.camera.capture(rev_output, format="rgb", use_video_port=True)
+                self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
-                rev_frame = rev_output.array
                 disp_output.truncate(0)
-                rev_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
-                rev_frame = ['rev_frame', rev_frame]
-                print("getFrame: frames returned")
-                return disp_frame, rev_frame
+                print("getFrame: frame returned")
+                return disp_frame
             finally:
                 pass
-        # elif source == "review":
-        #     print("getFrame: inside if review")
-        #     review_output = self.reviewArray
-        #     try:
-        #         print("getFrame: before capture")
-        #         self.camera.capture(review_output, format="rgb", use_video_port=True)
-        #         print("getFrame: after capture")
-        #         frame = review_output.array
-        #         review_output.truncate(0)
-        #         rev_frame = ['rev_frame', frame]
-        #         print("getFrame: rev_frame sent")
-        #         return rev_frame
-        #     finally:
-        #         pass
         else:
             err_msg = ('error', 'error')
             return err_msg
@@ -80,9 +56,10 @@ class Display:
     def __init__(self, parent):
         self.parent = parent
         self.window = self.parent.parent
+        self.image = None
         self.frame = None
         self.canvas = tk.Canvas(self.window,
-                                width=self.parent.cam.dispWidth, height=self.parent.cam.dispHeight,
+                                width=self.parent.cam.dispHeight, height=self.parent.cam.dispWidth,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0, columnspan=3)
 
@@ -93,8 +70,6 @@ class TabBar:
         self.window = self.parent.parent
 
         self.recVar = tk.IntVar()
-        self.reviewVar = tk.IntVar()
-        self.configVar = tk.IntVar()
         self.recImg = ImageTk.PhotoImage(Image.open("./images/recBtn-01.png"))
         self.stpImg = ImageTk.PhotoImage(Image.open("./images/recBtn-02.png"))
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg, selectimage=self.stpImg,
@@ -104,42 +79,10 @@ class TabBar:
                                      background="gray", highlightbackground="gray",
                                      activebackground="gray", selectcolor="gray")
         self.recBtn.grid(row=1, column=1, pady=(5, 0))
-        self.reviewBtn = tk.Button(self.window, text="REVIEW", command=lambda: start_review(self.parent),
-                                   cursor="hand1", height=3)
-        self.reviewBtn.grid(row=1, column=2, pady=(5, 0))
+
         self.configBtn = tk.Button(self.window, text="CONFIG", command=lambda: show_config(self.parent),
                                    cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
-
-
-class Review:
-    def __init__(self, parent, mainapp):
-        self.parent = parent
-        self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry("1024x768+480+0")
-        self.parent.title("REVIEW")
-
-        self.app = mainapp
-
-        self.frame = None
-        self.canvas = tk.Canvas(self.parent,
-                                width=self.app.cam.reviewWidth, height=self.app.cam.reviewHeight,
-                                borderwidth=0, highlightthickness=0)
-        self.canvas.grid(row=0, column=0)
-
-    #     self.revThread = threading.Thread(target=self.reviewThread)
-    #     self.revThread.start()
-    #
-    # def reviewThread(self):
-    #     try:
-    #         while self.app.running:
-    #             print("reviewThread: inside while loop")
-    #             time.sleep(0.025)
-    #             self.app.cam.camera.wait_recording()
-    #             rev_frame = self.app.cam.getFrame("review")
-    #             self.app.queue.put(rev_frame)
-    #     finally:
-    #         return
 
 
 class Config:
@@ -179,8 +122,6 @@ class App(tk.Frame):
         self.config = Config(create_window(self), self)
         self.config.parent.withdraw()
 
-        self.review = None
-
         self.running = 1
         self.currentFile = ""
 
@@ -206,9 +147,8 @@ class App(tk.Frame):
                 # print("displayThread: inside while loop")
                 time.sleep(0.025)
                 self.cam.camera.wait_recording()
-                disp_frame, rev_frame = self.cam.getFrame("display")
+                disp_frame = self.cam.getFrame("display")
                 self.queue.put(disp_frame)
-                self.queue.put(rev_frame)
         finally:
             return
 
@@ -243,11 +183,6 @@ def create_window(self):
     return window
 
 
-def start_review(self):
-    self.review = Review(create_window(self), self)
-    return
-
-
 def show_config(self):
     self.config.parent.deiconify()
     return
@@ -269,13 +204,10 @@ def processIncoming(self):
             msg = self.queue.get(0)
             if msg[0] == 'disp_frame':
                 print("processIncoming: inside if disp_frame:")
-                self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
+                self.display.image = Image.fromarray(msg[1])
+                self.display.image.rotate(90)
+                self.display.frame = ImageTk.PhotoImage(image=self.display.image)
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-            elif msg[0] == 'rev_frame':
-                if self.review:
-                    print("processIncoming: inside if rev_frame:")
-                    self.review.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
-                    self.review.canvas.create_image(0, 0, image=self.review.frame, anchor=tk.NW)
             else:
                 pass
         except self.queue.Empty:
