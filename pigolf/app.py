@@ -20,6 +20,7 @@ class Camera:
         self.camera.resolution = (640, 480)
         self.camera.framerate = 90
         self.camera.hflip = True
+        self.camera.vflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(640, 480))
 
