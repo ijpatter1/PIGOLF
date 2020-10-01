@@ -35,11 +35,11 @@ class Camera:
         # print("getFrame: init")
         if source == "display":
             # print("getFrame: inside if Display")
-            output = self.dispArray
+            disp_output = self.dispArray
             try:
-                self.camera.capture(output, format="rgb", use_video_port=True, resize=(self.dispWidth, self.dispHeight))
-                frame = output.array
-                output.truncate(0)
+                self.camera.capture(disp_output, format="rgb", use_video_port=True, resize=(self.dispWidth, self.dispHeight))
+                frame = disp_output.array
+                disp_output.truncate(0)
                 disp_frame = ['disp_frame', frame]
                 # print("getFrame: disp_frame sent")
                 return disp_frame
@@ -47,13 +47,13 @@ class Camera:
                 pass
         elif source == "review":
             print("getFrame: inside if review")
-            output = self.reviewArray
+            review_output = self.reviewArray
             try:
                 print("getFrame: before capture")
-                self.camera.capture(output, format="rgb", use_video_port=True)
+                self.camera.capture(review_output, format="rgb", use_video_port=True)
                 print("getFrame: after capture")
-                frame = output.array
-                output.truncate(0)
+                frame = review_output.array
+                review_output.truncate(0)
                 rev_frame = ['rev_frame', frame]
                 print("getFrame: rev_frame sent")
                 return rev_frame
