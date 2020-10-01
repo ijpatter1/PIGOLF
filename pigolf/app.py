@@ -125,7 +125,7 @@ class Review:
             while self.app.running:
                 print("reviewThread: inside while loop")
                 time.sleep(0.025)
-                self.app.cam.camera.wait_recording(splitter_port=3)
+                self.app.cam.camera.wait_recording()
                 rev_frame = self.app.cam.getFrame("review")
                 self.app.queue.put(rev_frame)
         finally:
