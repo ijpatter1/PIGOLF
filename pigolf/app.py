@@ -206,7 +206,7 @@ def processIncoming(self):
             if msg[0] == 'disp_frame':
                 # print("processIncoming: inside if disp_frame:")
                 self.display.inputImage = Image.fromarray(msg[1])
-                self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
+                self.display.outputImage = self.display.inputImage.rotate(180, expand=True)
                 self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             else:
