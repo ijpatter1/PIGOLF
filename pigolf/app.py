@@ -21,7 +21,7 @@ class Camera:
         self.camera.framerate = 90
         self.camera.rotation = 90
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(640, 480))
+        self.dispArray = array.PiRGBArray(self.camera, size=(480, 640))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=10)
 
