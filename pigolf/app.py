@@ -268,7 +268,7 @@ def processIncoming(self):
         try:
             msg = self.queue.get(0)
             if msg[0] == 'disp_frame':
-                # print("processIncoming: inside if disp_frame:")
+                print("processIncoming: inside if disp_frame:")
                 self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg[1]))
                 self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             elif msg[0] == 'rev_frame':
