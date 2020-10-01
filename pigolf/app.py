@@ -147,7 +147,7 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                time.sleep(0.025)
+                time.sleep(0.011)
                 self.cam.camera.wait_recording()
                 disp_frame = self.cam.getFrame("display")
                 self.queue.put(disp_frame)
