@@ -63,7 +63,7 @@ class Camera:
     def record(self):
         try:
             self.camera.wait_recording()
-            fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}'
+            fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
             self.camera.split_recording(self.parent.currentFile)
         except picamera.exc.PiCameraNotRecording:
@@ -116,7 +116,7 @@ class TabBar:
             self.parent.displayFlag.clear()
             self.parent.delayFlag.set()
             self.parent.recFlag.set()
-        else:
+        if not self.recVar:
             self.parent.recFlag.clear()
             self.parent.displayFlag.set()
 
@@ -208,12 +208,8 @@ class App(tk.Frame):
                         self.cam.record()
                     finally:
                         self.displayFlag.wait()
-                        if self.displayFlag.isSet():
-                            try:
-                                print('Saving...')
-                                self.cam.camera.split_recording(self.cam.stream, format='h264')
-                            finally:
-                                print("Saved")
+                        self.cam.camera.split_recording(self.cam.stream, format='h264')
+                        print('Saved')
         finally:
             return
 
