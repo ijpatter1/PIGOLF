@@ -14,8 +14,9 @@ class Camera:
     Video capture class with related methods
     """
 
-    def __init__(self):
+    def __init__(self, parent):
         # initialize the camera
+        self.parent = parent
         self.camera = picamera.PiCamera()
         self.camera.resolution = (640, 480)
         self.camera.framerate = 120
@@ -41,10 +42,34 @@ class Camera:
                 # print("getFrame: frame returned")
                 return disp_frame
             finally:
-                pass
+                return
+        if source == "delay":
+            # print("getFrame: inside if Delay")
+            disp_output = self.dispArray
+            try:
+                # print("getFrame: before display capture")
+                self.camera.capture(disp_output, format="rgb", use_video_port=True)
+                disp_frame = disp_output.array
+                disp_output.truncate(0)
+                disp_frame = ['delay_frame', disp_frame]
+                # print("getFrame: frame returned")
+                return disp_frame
+            finally:
+                return
         else:
             err_msg = ('error', 'error')
             return err_msg
+
+    def record(self):
+        try:
+            # self.camera.wait_recording()
+            fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
+            self.parent.currentFile = f'./swings/{fname}'
+            self.camera.split_recording(self.parent.currentFile)
+        except picamera.exc.PiCameraNotRecording:
+            print('Recording interrupted.')
+        finally:
+            return
 
 
 class Display:
@@ -75,7 +100,7 @@ class TabBar:
         self.recImg = ImageTk.PhotoImage(Image.open("./images/recBtn-01.png"))
         self.stpImg = ImageTk.PhotoImage(Image.open("./images/recBtn-02.png"))
         self.recBtn = tk.Checkbutton(self.window, image=self.recImg, selectimage=self.stpImg,
-                                     indicatoron=0, variable=self.recVar,
+                                     indicatoron=0, variable=self.recVar, command=self.hitRec,
                                      borderwidth=0, cursor="hand1",
                                      relief=tk.FLAT, offrelief=tk.FLAT,
                                      background="gray", highlightbackground="gray",
@@ -85,6 +110,15 @@ class TabBar:
         self.configBtn = tk.Button(self.window, text="CONFIG", command=lambda: show_config(self.parent),
                                    cursor="hand1", height=3)
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
+
+    def hitRec(self):
+        if self.recVar:
+            self.parent.displayFlag.clear()
+            self.parent.delayFlag.set()
+            self.parent.recFlag.set()
+        else:
+            self.parent.recFlag.clear()
+            self.parent.displayFlag.set()
 
 
 class Config:
@@ -115,7 +149,7 @@ class App(tk.Frame):
         # the user clicks the upper corner, "X" on Windows OS
         self.parent.protocol("WM_DELETE_WINDOW", lambda: ask_quit(self))
 
-        self.cam = Camera()
+        self.cam = Camera(self)
         self.queue = queue.Queue()
 
         self.display = Display(self)
@@ -127,13 +161,21 @@ class App(tk.Frame):
         self.running = 1
         self.currentFile = ""
 
+        # Event objects to allow threads to communicate
+        self.displayFlag = threading.Event()
+        self.displayFlag.set()
+        self.recFlag = threading.Event()
+        self.delayFlag = threading.Event()
+
         # Thread for handling the video feed
         self.dispThread = threading.Thread(target=self.displayThread)
+        self.dispThread.setDaemon(True)
         self.dispThread.start()
 
         # Thread for recording
-        # self.recThread = threading.Thread(target=recordThread(self))
-        # self.recThread.start()
+        self.recThread = threading.Thread(target=self.recordThread)
+        self.recThread.setDaemon(True)
+        self.recThread.start()
 
         # Start the periodic call in the GUI to check the queue
         self.periodicCall()
@@ -147,15 +189,46 @@ class App(tk.Frame):
         try:
             while self.running:
                 # print("displayThread: inside while loop")
-                time.sleep(0.025)
-                self.cam.camera.wait_recording()
-                disp_frame = self.cam.getFrame("display")
-                self.queue.put(disp_frame)
+                self.displayFlag.wait()
+                while self.displayFlag.isSet():
+                    time.sleep(0.025)
+                    self.cam.camera.wait_recording()
+                    disp_frame = self.cam.getFrame("display")
+                    self.queue.put(disp_frame)
         finally:
             return
 
     def recordThread(self):
-        pass
+        try:
+            while self.running:
+                self.recFlag.wait()
+                if self.recFlag.isSet():
+                    try:
+                        print('Recording...')
+                        self.cam.record()
+                    finally:
+                        self.displayFlag.wait()
+                        if self.displayFlag.isSet():
+                            try:
+                                print('Saving...')
+                                self.cam.camera.split_recording(self.cam.stream, format='h264')
+                            finally:
+                                print("Saved")
+        finally:
+            return
+
+    def delayThread(self):
+        try:
+            while self.running:
+                # print("delayThread: inside while loop")
+                self.recFlag.wait()
+                while self.recFlag.isSet():
+                    time.sleep(0.025)
+                    self.cam.camera.wait_recording()
+                    delay_frame = self.cam.getFrame("delay")
+                    self.queue.put(delay_frame)
+        finally:
+            return
 
     def periodicCall(self):
         """
@@ -202,12 +275,22 @@ def processIncoming(self):
     """
     # print("processIncoming: init")
     try:
+        if self.delayFlag.isSet():
+            time.sleep(5)
+            self.delayFlag.clear()
         msg = self.queue.get(0)
         if msg[0] == 'disp_frame':
             # print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
+            self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        if msg[0] == 'delay_frame':
+            # print("processIncoming: inside if disp_frame:")
+            self.display.inputImage = Image.fromarray(msg[1])
+            self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
+            self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
+            time.sleep(0.024)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
         else:
             pass
