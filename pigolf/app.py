@@ -200,10 +200,13 @@ class App(tk.Frame):
                 print("displayThread: running")
                 self.displayFlag.wait()
                 while self.displayFlag.isSet():
-                    time.sleep(0.025)
-                    self.cam.camera.wait_recording()
-                    disp_frame = self.cam.getFrame("display")
-                    self.queue.put(disp_frame)
+                    try:
+                        time.sleep(0.025)
+                        self.cam.camera.wait_recording()
+                        disp_frame = self.cam.getFrame("display")
+                        self.queue.put(disp_frame)
+                    finally:
+                        pass
         finally:
             return
 
