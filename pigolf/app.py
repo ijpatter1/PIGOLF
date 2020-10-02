@@ -42,7 +42,7 @@ class Camera:
                 # print("getFrame: frame returned")
                 return disp_frame
             finally:
-                return
+                pass
         if source == "delay":
             # print("getFrame: inside if Delay")
             disp_output = self.dispArray
@@ -55,7 +55,7 @@ class Camera:
                 # print("getFrame: frame returned")
                 return disp_frame
             finally:
-                return
+                pass
         else:
             err_msg = ('error', 'error')
             return err_msg
