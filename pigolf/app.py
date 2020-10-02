@@ -23,36 +23,37 @@ class Camera:
         self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(640, 480))
+        self.delayArray = array.PiRGBArray(self.camera, size=(640, 480))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=5)
 
         self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
-        # print("getFrame: init")
+        print("getFrame: init")
         if source == "display":
-            # print("getFrame: inside if Display")
+            print("getFrame: inside if Display")
             disp_output = self.dispArray
             try:
-                # print("getFrame: before display capture")
+                print("getFrame: before display capture")
                 self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
-                # print("getFrame: frame returned")
+                print("getFrame: frame returned")
                 return disp_frame
             finally:
                 pass
         if source == "delay":
-            # print("getFrame: inside if Delay")
-            disp_output = self.dispArray
+            print("getFrame: inside if Delay")
+            delay_output = self.delayArray
             try:
-                # print("getFrame: before display capture")
-                self.camera.capture(disp_output, format="rgb", use_video_port=True)
-                disp_frame = disp_output.array
-                disp_output.truncate(0)
-                disp_frame = ['delay_frame', disp_frame]
-                # print("getFrame: frame returned")
+                print("getFrame: before delay capture")
+                self.camera.capture(delay_output, format="rgb", use_video_port=True)
+                delay_frame = delay_output.array
+                delay_output.truncate(0)
+                disp_frame = ['delay_frame', delay_frame]
+                print("getFrame: delay frame returned")
                 return disp_frame
             finally:
                 pass
@@ -113,12 +114,14 @@ class TabBar:
 
     def hitRec(self):
         if self.recVar:
+            print("hitRec: record")
             self.parent.displayFlag.clear()
             self.parent.delayFlag.set()
             self.parent.recFlag.set()
         if not self.recVar:
-            self.parent.recFlag.clear()
+            print("hitRec: stop")
             self.parent.displayFlag.set()
+            self.parent.recFlag.clear()
 
 
 class Config:
@@ -272,17 +275,18 @@ def processIncoming(self):
     # print("processIncoming: init")
     try:
         if self.delayFlag.isSet():
+            print("inside delayFlag")
             time.sleep(5)
             self.delayFlag.clear()
         msg = self.queue.get(0)
         if msg[0] == 'disp_frame':
-            # print("processIncoming: inside if disp_frame:")
+            print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
         if msg[0] == 'delay_frame':
-            # print("processIncoming: inside if disp_frame:")
+            print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
