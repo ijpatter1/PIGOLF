@@ -181,6 +181,11 @@ class App(tk.Frame):
         self.recThread.setDaemon(True)
         self.recThread.start()
 
+        # Thread for handling the delay
+        self.delThread = threading.Thread(target=self.delayThread)
+        self.delThread.setDaemon(True)
+        self.delThread.start()
+
         # Start the periodic call in the GUI to check the queue
         self.periodicCall()
 
@@ -220,9 +225,10 @@ class App(tk.Frame):
     def delayThread(self):
         try:
             while self.running:
-                # print("delayThread: inside while loop")
+                print()
                 self.recFlag.wait()
                 while self.recFlag.isSet():
+                    print("delayThread: inside while loop")
                     time.sleep(0.025)
                     self.cam.camera.wait_recording()
                     delay_frame = self.cam.getFrame("delay")
@@ -245,6 +251,7 @@ class App(tk.Frame):
             import sys
             sys.exit(1)
         if self.queue.qsize():
+            print("periodicCall: there is a message in the queue!")
             processIncoming(self)
         self.parent.after(1, self.periodicCall)
 
@@ -294,6 +301,7 @@ def processIncoming(self):
             time.sleep(0.024)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
         else:
+            print("processIncoming: pass")
             pass
     except self.queue.Empty:
         # just on general principles, although we don't
