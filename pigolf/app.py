@@ -66,7 +66,7 @@ class Camera:
             self.camera.wait_recording()
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
-            self.camera.split_recording(self.parent.currentFile)
+            self.camera.split_recording(self.parent.currentFile, splitter_port=2)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
         finally:
@@ -219,7 +219,7 @@ class App(tk.Frame):
                         self.cam.record()
                     finally:
                         self.displayFlag.wait()
-                        self.cam.camera.split_recording(self.cam.stream, format='h264')
+                        self.cam.camera.stop_recording(splitter_port=2)
                         print('Saved')
         finally:
             return
