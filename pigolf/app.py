@@ -226,7 +226,8 @@ class App(tk.Frame):
                         self.cam.record()
                     finally:
                         self.displayFlag.wait()
-                        self.cam.camera.split_recording(self.cam.stream, format='h264')
+                        self.cam.camera.split_recording(self.cam.stream, format='h264',
+                                                        inline_headers=True, sps_timing=True)
                         print('Saved')
         finally:
             return
