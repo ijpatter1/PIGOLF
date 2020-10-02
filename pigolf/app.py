@@ -66,7 +66,7 @@ class Camera:
             self.camera.wait_recording()
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
-            self.camera.split_recording(self.parent.currentFile, splitter_port=2)
+            self.camera.split_recording(self.parent.currentFile)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
         finally:
@@ -219,7 +219,7 @@ class App(tk.Frame):
                         self.cam.record()
                     finally:
                         self.displayFlag.wait()
-                        self.cam.camera.stop_recording(splitter_port=2)
+                        self.cam.camera.split_recording(self.cam.stream, format='h264')
                         print('Saved')
         finally:
             return
@@ -231,11 +231,14 @@ class App(tk.Frame):
                 self.recFlag.wait()
                 print("delayThread: recFlag set")
                 while self.recFlag.isSet():
-                    print("delayThread: inside while loop")
-                    time.sleep(0.025)
-                    self.cam.camera.wait_recording()
-                    delay_frame = self.cam.getFrame("delay")
-                    self.queue.put(delay_frame)
+                    try:
+                        print("delayThread: inside while loop")
+                        time.sleep(0.025)
+                        self.cam.camera.wait_recording()
+                        delay_frame = self.cam.getFrame("delay")
+                        self.queue.put(delay_frame)
+                    finally:
+                        pass
         finally:
             return
 
