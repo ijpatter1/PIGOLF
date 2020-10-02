@@ -113,12 +113,13 @@ class TabBar:
         self.configBtn.grid(row=1, column=0, pady=(5, 0))
 
     def hitRec(self):
-        if self.recVar:
+        status = self.recVar.get()
+        if status:
             print("hitRec: record")
             self.parent.displayFlag.clear()
             self.parent.delayFlag.set()
             self.parent.recFlag.set()
-        if not self.recVar:
+        if not status:
             print("hitRec: stop")
             self.parent.displayFlag.set()
             self.parent.recFlag.clear()
@@ -279,13 +280,13 @@ def processIncoming(self):
             time.sleep(5)
             self.delayFlag.clear()
         msg = self.queue.get(0)
-        if msg[0] == 'disp_frame':
+        if msg[0] == 'disp_frame' and self.displayFlag.isSet():
             print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-        if msg[0] == 'delay_frame':
+        if msg[0] == 'delay_frame' and self.recThread.isSet():
             print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
