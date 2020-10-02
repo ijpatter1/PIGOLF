@@ -63,8 +63,8 @@ class Camera:
     def record(self):
         try:
             self.camera.wait_recording()
-            # fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
-            self.parent.currentFile = f'./swings/{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
+            fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}'
+            self.parent.currentFile = f'./swings/{fname}'
             self.camera.split_recording(self.parent.currentFile)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
