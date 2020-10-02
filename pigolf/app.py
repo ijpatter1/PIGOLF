@@ -36,6 +36,7 @@ class Camera:
             disp_output = self.dispArray
             try:
                 print("getFrame: before display capture")
+                disp_output.truncate(0)
                 self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
@@ -199,6 +200,7 @@ class App(tk.Frame):
             while self.running:
                 print("displayThread: waiting")
                 self.displayFlag.wait()
+                print("displayThread: displayFlag set")
                 while self.displayFlag.isSet():
                     try:
                         time.sleep(0.025)
