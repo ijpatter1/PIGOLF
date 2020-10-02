@@ -237,11 +237,14 @@ class App(tk.Frame):
                 print("delayThread: recFlag set")
                 while self.recFlag.isSet():
                     try:
-                        print("delayThread: inside while loop")
                         time.sleep(0.025)
                         self.cam.camera.wait_recording()
+                        print("delayThread: getting frame")
                         delay_frame = self.cam.getFrame("delay")
                         self.queue.put(delay_frame)
+                        print("delayThread: frame sent to queue")
+                    except:
+                        pass
                     finally:
                         pass
         finally:
@@ -304,7 +307,7 @@ def processIncoming(self):
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-            print("processIncoming: disp_frame created")
+            # print("processIncoming: disp_frame created")
         if msg[0] == 'delay_frame' and self.recFlag.isSet():
             print("processIncoming: inside if delay_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
