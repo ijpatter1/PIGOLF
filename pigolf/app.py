@@ -32,16 +32,16 @@ class Camera:
     def getFrame(self, source):
         # print("getFrame: init")
         if source == "display":
-            print("getFrame: inside if Display")
+            # print("getFrame: inside if Display")
             disp_output = self.dispArray
             try:
-                print("getFrame: before display capture")
+                # print("getFrame: before display capture")
                 disp_output.truncate(0)
                 self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
-                print("getFrame: disp_frame returned")
+                # print("getFrame: disp_frame returned")
                 return disp_frame
             finally:
                 pass
@@ -198,9 +198,9 @@ class App(tk.Frame):
         """
         try:
             while self.running:
-                print("displayThread: waiting")
+                # print("displayThread: waiting")
                 self.displayFlag.wait()
-                print("displayThread: displayFlag set")
+                # print("displayThread: displayFlag set")
                 while self.displayFlag.isSet():
                     try:
                         time.sleep(0.025)
@@ -237,7 +237,7 @@ class App(tk.Frame):
                 print("delayThread: recFlag set")
                 while self.recFlag.isSet():
                     try:
-                        # print("delayThread: inside while loop")
+                        print("delayThread: inside while loop")
                         time.sleep(0.025)
                         self.cam.camera.wait_recording()
                         delay_frame = self.cam.getFrame("delay")
@@ -299,19 +299,20 @@ def processIncoming(self):
             self.delayFlag.clear()
         msg = self.queue.get(0)
         if msg[0] == 'disp_frame' and self.displayFlag.isSet():
-            print("processIncoming: inside if disp_frame:")
+            # print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             print("processIncoming: disp_frame created")
         if msg[0] == 'delay_frame' and self.recFlag.isSet():
-            # print("processIncoming: inside if delay_frame:")
+            print("processIncoming: inside if delay_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
             time.sleep(0.024)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+            print("processIncoming: delay_frame created")
         else:
             # print("processIncoming: pass")
             pass
