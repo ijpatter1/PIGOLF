@@ -32,15 +32,15 @@ class Camera:
     def getFrame(self, source):
         print("getFrame: init")
         if source == "display":
-            print("getFrame: inside if Display")
+            # print("getFrame: inside if Display")
             disp_output = self.dispArray
             try:
-                print("getFrame: before display capture")
+                # print("getFrame: before display capture")
                 self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
-                print("getFrame: frame returned")
+                # print("getFrame: frame returned")
                 return disp_frame
             finally:
                 pass
@@ -197,7 +197,7 @@ class App(tk.Frame):
         """
         try:
             while self.running:
-                # print("displayThread: inside while loop")
+                print("displayThread: running")
                 self.displayFlag.wait()
                 while self.displayFlag.isSet():
                     time.sleep(0.025)
@@ -210,7 +210,9 @@ class App(tk.Frame):
     def recordThread(self):
         try:
             while self.running:
+                print("recordThread: running")
                 self.recFlag.wait()
+                print("recordThread: recFlag set")
                 if self.recFlag.isSet():
                     try:
                         print('Recording...')
@@ -225,8 +227,9 @@ class App(tk.Frame):
     def delayThread(self):
         try:
             while self.running:
-                print()
+                print("delayThread: running")
                 self.recFlag.wait()
+                print("delayThread: recFlag set")
                 while self.recFlag.isSet():
                     print("delayThread: inside while loop")
                     time.sleep(0.025)
@@ -283,7 +286,7 @@ def processIncoming(self):
     # print("processIncoming: init")
     try:
         if self.delayFlag.isSet():
-            print("inside delayFlag")
+            print("processIncoming: inside if delayFlag:")
             time.sleep(5)
             self.delayFlag.clear()
         msg = self.queue.get(0)
@@ -307,6 +310,8 @@ def processIncoming(self):
         # just on general principles, although we don't
         # expect this branch to ever be taken
         pass
+    finally:
+        return
 
 
 if __name__ == "__main__":
