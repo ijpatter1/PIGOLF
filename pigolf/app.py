@@ -19,7 +19,7 @@ class Camera:
         self.parent = parent
         self.camera = picamera.PiCamera()
         self.camera.resolution = (640, 480)
-        self.camera.framerate = 90
+        self.camera.framerate = 120
         self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(640, 480))
@@ -199,7 +199,7 @@ class App(tk.Frame):
         """
         try:
             while self.running:
-                # print("displayThread: waiting")
+                print("displayThread: waiting")
                 self.displayFlag.wait()
                 # print("displayThread: displayFlag set")
                 while self.displayFlag.isSet():
@@ -242,10 +242,10 @@ class App(tk.Frame):
                     try:
                         time.sleep(0.025)
                         self.cam.camera.wait_recording()
-                        print("delayThread: getting frame")
+                        # print("delayThread: getting frame")
                         delay_frame = self.cam.getFrame("delay")
                         self.queue.put(delay_frame)
-                        print("delayThread: frame sent to queue")
+                        # print("delayThread: frame sent to queue")
                     except:
                         pass
                     finally:
@@ -312,17 +312,17 @@ def processIncoming(self):
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             # print("processIncoming: disp_frame created")
         if msg[0] == 'delay_frame' and self.recFlag.isSet():
-            print("processIncoming: inside if delay_frame:")
+            # print("processIncoming: inside if delay_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
-            time.sleep(0.024)
+            time.sleep(0.025)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-            print("processIncoming: delay_frame created")
+            # print("processIncoming: delay_frame created")
         else:
             # print("processIncoming: pass")
             pass
-    except self.queue.Empty:
+    except:
         # just on general principles, although we don't
         # expect this branch to ever be taken
         pass
