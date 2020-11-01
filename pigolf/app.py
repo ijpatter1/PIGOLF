@@ -148,6 +148,7 @@ class App(tk.Frame):
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
         self.parent.geometry("476x730+0+0")
+        # self.parent.geometry("1024x768+480+0")
         self.parent.attributes('-zoomed', True)
         self.parent.title("PIGOLF")
 
