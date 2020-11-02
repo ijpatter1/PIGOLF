@@ -21,13 +21,13 @@ class Camera:
         self.dispWidth = 640
         self.dispHeight = 480
         self.camera.resolution = (self.dispWidth, self.dispHeight)
-        self.camera.framerate = self.parent.fps
+        self.camera.framerate = 50
         # self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
         self.delayArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
 
-        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=300)
+        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=5)
 
         self.camera.start_recording(self.stream, format='h264')
 
@@ -70,7 +70,7 @@ class Camera:
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
             self.camera.split_recording(self.parent.currentFile, format="h264",
-                                        level="4.2", inline_headers=True, sps_timing=True)
+                                        inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
         finally:
@@ -159,7 +159,7 @@ class App(tk.Frame):
         # the user clicks the upper corner, "X" on Windows OS
         self.parent.protocol("WM_DELETE_WINDOW", lambda: ask_quit(self))
 
-        self.fps = 50
+        self.delay = 0.020
         self.cam = Camera(self)
         self.queue = queue.Queue()
 
