@@ -18,9 +18,11 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.dispWidth = 1640
-        self.dispHeight = 922
-        self.camera.resolution = (self.dispWidth, self.dispHeight)
+        self.width = 1640
+        self.height = 1232
+        self.dispWidth = 1438
+        self.dispHeight = 1080
+        self.camera.resolution = (self.width, self.height)
         self.camera.framerate = 25
         # self.camera.hflip = True
 
@@ -29,7 +31,7 @@ class Camera:
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=1)
 
-        self.camera.start_recording(self.stream, format='h264')
+        self.camera.start_recording(self.stream, format='h264', resize=(self.dispWidth,self.dispHeight))
 
     def getFrame(self, source):
         # print("getFrame: init")
