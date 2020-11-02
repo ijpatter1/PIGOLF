@@ -52,7 +52,7 @@ class Camera:
             delay_output = self.delayArray
             try:
                 # print("getFrame: before delay capture")
-                self.camera.capture(delay_output, format="rgb", use_video_port=True)
+                self.camera.capture(delay_output, format="rgb", use_video_port=True, splitter_port=2)
                 delay_frame = delay_output.array
                 delay_output.truncate(0)
                 disp_frame = ['delay_frame', delay_frame]
@@ -69,8 +69,8 @@ class Camera:
             self.camera.wait_recording()
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
-            self.camera.split_recording(self.parent.currentFile, format="h264",
-                                        inline_headers=True, sps_timing=True)
+            self.camera.split_recording(self.parent.currentFile, splitter_port=2,
+                                        format="h264", inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
         finally:
