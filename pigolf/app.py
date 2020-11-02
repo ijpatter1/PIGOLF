@@ -102,7 +102,7 @@ class Display:
         self.app = mainapp
 
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry(f"{self.app.cam.dispWidth}x{self.app.cam.dispWidth}+0+0")
+        self.parent.geometry(f"{self.app.cam.dispWidth}x{self.app.cam.dispWidth}+481+0")
         self.parent.title("DISPLAY")
 
         self.inputImage = None
