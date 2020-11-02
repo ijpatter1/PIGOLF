@@ -220,7 +220,7 @@ class App(tk.Frame):
             while self.running:
                 print("displayThread: waiting")
                 self.displayFlag.wait()
-                # print("displayThread: displayFlag set")
+                print("displayThread: displayFlag set")
                 while self.displayFlag.isSet():
                     try:
                         time.sleep(0.025)
