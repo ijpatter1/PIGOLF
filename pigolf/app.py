@@ -159,7 +159,7 @@ class App(tk.Frame):
         # the user clicks the upper corner, "X" on Windows OS
         self.parent.protocol("WM_DELETE_WINDOW", lambda: ask_quit(self))
 
-        self.delay = 0.020
+        self.delay = 0.010
         self.cam = Camera(self)
         self.queue = queue.Queue()
 
