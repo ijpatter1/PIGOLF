@@ -72,7 +72,7 @@ class Camera:
             self.camera.split_recording(self.parent.currentFile, format="h264",
                                         inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
-            # print('Recording interrupted.')
+            print('Recording interrupted.')
         finally:
             return
 
