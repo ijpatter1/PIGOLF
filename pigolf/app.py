@@ -18,8 +18,8 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.dispWidth = 1640
-        self.dispHeight = 922
+        self.dispWidth = 1648
+        self.dispHeight = 928
         self.camera.resolution = (self.dispWidth, self.dispHeight)
         self.camera.framerate = 30
         # self.camera.hflip = True
@@ -27,7 +27,7 @@ class Camera:
         self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
         self.delayArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
 
-        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=5)
+        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=300)
 
         self.camera.start_recording(self.stream, format='h264', level="4.2")
 
