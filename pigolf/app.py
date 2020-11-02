@@ -29,7 +29,7 @@ class Camera:
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=5)
 
-        self.camera.start_recording(self.stream, format='h264')
+        self.camera.start_recording(self.stream, format='h264', level="4.2")
 
     def getFrame(self, source):
         # print("getFrame: init")
@@ -70,7 +70,7 @@ class Camera:
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
             self.camera.split_recording(self.parent.currentFile, format="h264",
-                                        inline_headers=True, sps_timing=True)
+                                        level="4.2", inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
         finally:
