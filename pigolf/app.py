@@ -18,8 +18,8 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.width = 1024
-        self.height = 768
+        self.width = 1400
+        self.height = 1050
         self.camera.resolution = (self.width, self.height)
         self.camera.framerate = 25
         # self.camera.hflip = True
