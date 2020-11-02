@@ -18,12 +18,14 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.camera.resolution = (640, 480)
-        self.camera.framerate = 120
+        self.dispWidth = 480
+        self.dispHeight = 640
+        self.camera.resolution = (self.dispHeight, self.dispHeight)
+        self.camera.framerate = 40
         self.camera.hflip = True
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(640, 480))
-        self.delayArray = array.PiRGBArray(self.camera, size=(640, 480))
+        self.dispArray = array.PiRGBArray(self.camera, size=(self.dispHeight, self.dispWidth))
+        self.delayArray = array.PiRGBArray(self.camera, size=(self.dispHeight, self.dispWidth))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=5)
 
@@ -95,18 +97,21 @@ class Display:
     Video stream display class
     """
 
-    def __init__(self, parent):
+    def __init__(self, parent, mainapp):
         self.parent = parent
-        self.window = self.parent.parent
-        self.dispWidth = 480
-        self.dispHeight = 640
+        self.parent.configure(background="gray", borderwidth=0)
+        self.parent.geometry("1024x768+0+0")
+        self.parent.title("DISPLAY")
+
+        self.app = mainapp
+
         self.inputImage = None
         self.outputImage = None
         self.frame = None
-        self.canvas = tk.Canvas(self.window,
-                                width=self.dispWidth, height=self.dispHeight,
+        self.canvas = tk.Canvas(self.parent,
+                                width=self.app.cam.dispWidth, height=self.app.cam.dispHeight,
                                 borderwidth=0, highlightthickness=0)
-        self.canvas.grid(row=0, column=0, columnspan=3)
+        self.canvas.grid(row=0, column=0)
 
 
 class TabBar:
@@ -162,9 +167,7 @@ class App(tk.Frame):
         # define our parent frame config
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry("476x730+0+0")
-        # self.parent.geometry("1024x768+480+0")
-        self.parent.attributes('-zoomed', True)
+        self.parent.geometry("476x300+0+0")
         self.parent.title("PIGOLF")
 
         # This protocol method is a tkinter built-in method to catch if
