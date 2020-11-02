@@ -99,11 +99,11 @@ class Display:
 
     def __init__(self, parent, mainapp):
         self.parent = parent
-        self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry("1024x768+0+0")
-        self.parent.title("DISPLAY")
-
         self.app = mainapp
+
+        self.parent.configure(background="gray", borderwidth=0)
+        self.parent.geometry(f"{self.app.cam.dispWidth}x{self.app.cam.dispWidth}+0+0")
+        self.parent.title("DISPLAY")
 
         self.inputImage = None
         self.outputImage = None
