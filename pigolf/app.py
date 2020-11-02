@@ -18,8 +18,8 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.dispWidth = 1296
-        self.dispHeight = 972
+        self.dispWidth = 1640
+        self.dispHeight = 1232
         self.camera.resolution = (self.dispWidth, self.dispHeight)
         self.camera.framerate = 40
         # self.camera.hflip = True
@@ -43,7 +43,7 @@ class Camera:
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
-                print("getFrame: disp_frame returned")
+                # print("getFrame: disp_frame returned")
                 return disp_frame
             finally:
                 pass
@@ -72,7 +72,7 @@ class Camera:
             self.camera.split_recording(self.parent.currentFile, format="h264",
                                         inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
-            print('Recording interrupted.')
+            # print('Recording interrupted.')
         finally:
             return
 
@@ -218,9 +218,9 @@ class App(tk.Frame):
         """
         try:
             while self.running:
-                print("displayThread: waiting")
+                # print("displayThread: waiting")
                 self.displayFlag.wait()
-                print("displayThread: displayFlag set")
+                # print("displayThread: displayFlag set")
                 while self.displayFlag.isSet():
                     try:
                         time.sleep(0.024)
@@ -239,9 +239,9 @@ class App(tk.Frame):
     def recordThread(self):
         try:
             while self.running:
-                print("recordThread: waiting")
+                # print("recordThread: waiting")
                 self.recFlag.wait()
-                print("recordThread: recFlag set")
+                # print("recordThread: recFlag set")
                 if self.recFlag.isSet():
                     try:
                         print('Recording...')
@@ -256,9 +256,9 @@ class App(tk.Frame):
     def delayThread(self):
         try:
             while self.running:
-                print("delayThread: waiting")
+                # print("delayThread: waiting")
                 self.recFlag.wait()
-                print("delayThread: recFlag set")
+                # print("delayThread: recFlag set")
                 while self.recFlag.isSet():
                     try:
                         time.sleep(0.024)
@@ -326,7 +326,7 @@ def processIncoming(self):
             self.delayFlag.clear()
         msg = self.queue.get(0)
         if msg[0] == 'disp_frame' and self.displayFlag.isSet():
-            print("processIncoming: inside if disp_frame:")
+            # print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
