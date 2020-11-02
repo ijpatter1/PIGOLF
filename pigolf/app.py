@@ -18,10 +18,10 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.dispWidth = 1280
-        self.dispHeight = 720
+        self.dispWidth = 1640
+        self.dispHeight = 922
         self.camera.resolution = (self.dispWidth, self.dispHeight)
-        self.camera.framerate = 60
+        self.camera.framerate = 30
         # self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
@@ -208,7 +208,7 @@ class App(tk.Frame):
                 # print("displayThread: displayFlag set")
                 while self.displayFlag.isSet():
                     try:
-                        time.sleep(0.016)
+                        time.sleep(0.033)
                         self.cam.camera.wait_recording()
                         # print("displayThread: getFrame")
                         disp_frame = self.cam.getFrame("display")
@@ -246,7 +246,7 @@ class App(tk.Frame):
                 # print("delayThread: recFlag set")
                 while self.recFlag.isSet():
                     try:
-                        time.sleep(0.016)
+                        time.sleep(0.033)
                         self.cam.camera.wait_recording()
                         # print("delayThread: getting frame")
                         delay_frame = self.cam.getFrame("delay")
@@ -322,7 +322,7 @@ def processIncoming(self):
             self.display.inputImage = Image.fromarray(msg[1])
             # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
-            time.sleep(0.016)
+            time.sleep(0.033)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             # print("processIncoming: delay_frame created")
         else:
