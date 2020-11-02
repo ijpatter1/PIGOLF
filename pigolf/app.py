@@ -74,6 +74,21 @@ class Camera:
         finally:
             return
 
+# class Review:
+#     def __init__(self, parent, mainapp):
+#         self.parent = parent
+#         self.parent.configure(background="gray", borderwidth=0)
+#         self.parent.geometry("1024x768+480+0")
+#         self.parent.title("REVIEW")
+#
+#         self.app = mainapp
+#
+#         self.frame = None
+#         self.canvas = tk.Canvas(self.parent,
+#                                 width=self.app.cam.reviewWidth, height=self.app.cam.reviewHeight,
+#                                 borderwidth=0, highlightthickness=0)
+#         self.canvas.grid(row=0, column=0)
+
 
 class Display:
     """
