@@ -174,7 +174,7 @@ class App(tk.Frame):
         self.cam = Camera(self)
         self.queue = queue.Queue()
 
-        self.display = Display(self)
+        self.display = Display(create_window(self), self)
         self.tbar = TabBar(self)
 
         self.config = Config(create_window(self), self)
