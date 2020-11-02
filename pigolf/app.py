@@ -21,7 +21,7 @@ class Camera:
         self.width = 1024
         self.height = 768
         self.camera.resolution = (self.width, self.height)
-        self.camera.framerate = 250
+        self.camera.framerate = 50
         # self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
