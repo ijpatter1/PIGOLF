@@ -70,7 +70,8 @@ class Camera:
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
             self.camera.split_recording(self.parent.currentFile,
-                                        format="h264", inline_headers=True, sps_timing=True)
+                                        format="h264", splitter_port=2,
+                                        inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
         finally:
