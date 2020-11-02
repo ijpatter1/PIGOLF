@@ -26,13 +26,12 @@ class Camera:
         self.camera.framerate = 25
         # self.camera.hflip = True
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(self.captureWidth, self.captureHeight))
-        self.delayArray = array.PiRGBArray(self.camera, size=(self.captureWidth, self.captureHeight))
+        self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
+        self.delayArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=1)
 
-        self.camera.start_recording(self.stream, format='h264',
-                                    splitter_port=2, resize=(self.captureWidth, self.captureHeight))
+        self.camera.start_recording(self.stream, format='h264', resize=(self.captureWidth, self.captureHeight))
 
     def getFrame(self, source):
         # print("getFrame: init")
@@ -42,7 +41,7 @@ class Camera:
             try:
                 # print("getFrame: before display capture")
                 disp_output.truncate(0)
-                self.camera.capture(disp_output, format="rgb", use_video_port=True, splitter_port=2)
+                self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
@@ -55,7 +54,7 @@ class Camera:
             delay_output = self.delayArray
             try:
                 # print("getFrame: before delay capture")
-                self.camera.capture(delay_output, format="rgb", use_video_port=True, splitter_port=2)
+                self.camera.capture(delay_output, format="rgb", use_video_port=True)
                 delay_frame = delay_output.array
                 delay_output.truncate(0)
                 disp_frame = ['delay_frame', delay_frame]
@@ -73,7 +72,7 @@ class Camera:
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
             self.camera.split_recording(self.parent.currentFile,
-                                        format="h264", splitter_port=1,
+                                        format="h264", splitter_port=2,
                                         inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
@@ -91,14 +90,14 @@ class Display:
         self.app = mainapp
 
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry(f"{self.app.cam.captureWidth}x{self.app.cam.captureHeight}+481+0")
+        self.parent.geometry(f"{self.app.cam.width}x{self.app.cam.height}+481+0")
         self.parent.title("DISPLAY")
 
         self.inputImage = None
         # self.outputImage = None
         self.frame = None
         self.canvas = tk.Canvas(self.parent,
-                                width=self.app.cam.captureWidth, height=self.app.cam.captureHeight,
+                                width=self.app.cam.width, height=self.app.cam.height,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
@@ -238,7 +237,7 @@ class App(tk.Frame):
                         self.cam.record()
                     finally:
                         self.displayFlag.wait()
-                        self.cam.camera.stop_recording(splitter_port=1)
+                        self.cam.camera.stop_recording(self.cam.stream, format='h264', splitter_port=2)
                         print('Saved')
         finally:
             return
