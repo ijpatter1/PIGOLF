@@ -209,7 +209,7 @@ class App(tk.Frame):
                 # print("displayThread: displayFlag set")
                 while self.displayFlag.isSet():
                     try:
-                        time.sleep(self.fps)
+                        time.sleep(self.delay)
                         self.cam.camera.wait_recording()
                         # print("displayThread: getFrame")
                         disp_frame = self.cam.getFrame("display")
@@ -247,7 +247,7 @@ class App(tk.Frame):
                 # print("delayThread: recFlag set")
                 while self.recFlag.isSet():
                     try:
-                        time.sleep(self.fps)
+                        time.sleep(self.delay)
                         self.cam.camera.wait_recording()
                         # print("delayThread: getting frame")
                         delay_frame = self.cam.getFrame("delay")
