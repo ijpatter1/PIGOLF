@@ -18,10 +18,10 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.dispWidth = 640
-        self.dispHeight = 480
+        self.dispWidth = 1640
+        self.dispHeight = 922
         self.camera.resolution = (self.dispWidth, self.dispHeight)
-        self.camera.framerate = 50
+        self.camera.framerate = 25
         # self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
