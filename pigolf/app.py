@@ -227,6 +227,7 @@ class App(tk.Frame):
                         self.cam.camera.wait_recording()
                         disp_frame = self.cam.getFrame("display")
                         self.queue.put(disp_frame)
+                        print("displayThread: put disp_frame")
                     except:
                         pass
                     finally:
