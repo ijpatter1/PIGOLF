@@ -324,7 +324,7 @@ def processIncoming(self):
             self.delayFlag.clear()
         msg = self.queue.get(0)
         if msg[0] == 'disp_frame' and self.displayFlag.isSet():
-            # print("processIncoming: inside if disp_frame:")
+            print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
             self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
