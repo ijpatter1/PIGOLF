@@ -18,8 +18,8 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.dispWidth = 1640
-        self.dispHeight = 1232
+        self.dispWidth = 640
+        self.dispHeight = 480
         self.camera.resolution = (self.dispWidth, self.dispHeight)
         self.camera.framerate = 40
         # self.camera.hflip = True
@@ -228,7 +228,7 @@ class App(tk.Frame):
                         # print("displayThread: getFrame")
                         disp_frame = self.cam.getFrame("display")
                         self.queue.put(disp_frame)
-                        print("displayThread: put disp_frame")
+                        # print("displayThread: put disp_frame")
                     except:
                         pass
                     finally:
