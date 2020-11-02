@@ -27,7 +27,7 @@ class Camera:
         self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
         self.delayArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
 
-        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=5)
+        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=1)
 
         self.camera.start_recording(self.stream, format='h264')
 
