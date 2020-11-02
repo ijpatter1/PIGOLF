@@ -41,7 +41,8 @@ class Camera:
             try:
                 # print("getFrame: before display capture")
                 disp_output.truncate(0)
-                self.camera.capture(disp_output, format="rgb", use_video_port=True, resize=(self.captureWidth, self.captureHeight))
+                self.camera.capture(disp_output, format="rgb", use_video_port=True,
+                                    resize=(self.captureWidth, self.captureHeight))
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
@@ -90,7 +91,7 @@ class Display:
         self.app = mainapp
 
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry(f"{self.app.cam.width}x{self.app.cam.height}+481+0")
+        self.parent.geometry(f"{self.app.cam.captureWidth}x{self.app.cam.captureHeight}+481+0")
         self.parent.title("DISPLAY")
 
         self.inputImage = None
