@@ -29,7 +29,7 @@ class Camera:
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=300)
 
-        self.camera.start_recording(self.stream, format='h264', level="4.2")
+        self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
         # print("getFrame: init")
