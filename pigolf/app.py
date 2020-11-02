@@ -18,20 +18,18 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.width = 1640
-        self.height = 1232
-        self.dispWidth = 1438
-        self.dispHeight = 1080
+        self.width = 1024
+        self.height = 768
         self.camera.resolution = (self.width, self.height)
         self.camera.framerate = 25
         # self.camera.hflip = True
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
-        self.delayArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
+        self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
+        self.delayArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=1)
 
-        self.camera.start_recording(self.stream, format='h264', resize=(self.dispWidth,self.dispHeight))
+        self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
         # print("getFrame: init")
@@ -89,14 +87,14 @@ class Display:
         self.app = mainapp
 
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry(f"{self.app.cam.dispWidth}x{self.app.cam.dispHeight}+481+0")
+        self.parent.geometry(f"{self.app.cam.width}x{self.app.cam.height}+481+0")
         self.parent.title("DISPLAY")
 
         self.inputImage = None
         # self.outputImage = None
         self.frame = None
         self.canvas = tk.Canvas(self.parent,
-                                width=self.app.cam.dispWidth, height=self.app.cam.dispHeight,
+                                width=self.app.cam.width, height=self.app.cam.height,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
