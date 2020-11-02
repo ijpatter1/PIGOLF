@@ -20,8 +20,6 @@ class Camera:
         self.camera = picamera.PiCamera()
         self.width = 1024
         self.height = 768
-        self.captureWidth = 1024
-        self.captureHeight = 768
         self.camera.resolution = (self.width, self.height)
         self.camera.framerate = 25
         # self.camera.hflip = True
@@ -31,7 +29,7 @@ class Camera:
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=1)
 
-        self.camera.start_recording(self.stream, format='h264', resize=(self.captureWidth, self.captureHeight))
+        self.camera.start_recording(self.stream, format='h264')
 
     def getFrame(self, source):
         # print("getFrame: init")
@@ -72,8 +70,7 @@ class Camera:
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
             self.camera.split_recording(self.parent.currentFile,
-                                        format="h264", splitter_port=2,
-                                        inline_headers=True, sps_timing=True)
+                                        format="h264", inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
         finally:
@@ -237,7 +234,7 @@ class App(tk.Frame):
                         self.cam.record()
                     finally:
                         self.displayFlag.wait()
-                        self.cam.camera.stop_recording(self.cam.stream, format='h264', splitter_port=2)
+                        self.cam.camera.split_recording(self.cam.stream, format='h264', level="4.2")
                         print('Saved')
         finally:
             return
