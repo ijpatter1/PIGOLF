@@ -24,8 +24,8 @@ class Camera:
         self.camera.framerate = 40
         self.camera.hflip = True
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(self.dispHeight, self.dispWidth))
-        self.delayArray = array.PiRGBArray(self.camera, size=(self.dispHeight, self.dispWidth))
+        self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
+        self.delayArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=5)
 
@@ -37,7 +37,7 @@ class Camera:
             # print("getFrame: inside if Display")
             disp_output = self.dispArray
             try:
-                print("getFrame: before display capture")
+                # print("getFrame: before display capture")
                 disp_output.truncate(0)
                 self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
@@ -225,7 +225,7 @@ class App(tk.Frame):
                     try:
                         time.sleep(0.025)
                         self.cam.camera.wait_recording()
-                        print("displayThread: getFrame")
+                        # print("displayThread: getFrame")
                         disp_frame = self.cam.getFrame("display")
                         self.queue.put(disp_frame)
                         print("displayThread: put disp_frame")
