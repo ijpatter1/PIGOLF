@@ -21,7 +21,7 @@ class Camera:
         self.dispWidth = 1280
         self.dispHeight = 720
         self.camera.resolution = (self.dispWidth, self.dispHeight)
-        self.camera.framerate = 40
+        self.camera.framerate = 60
         # self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.dispWidth, self.dispHeight))
@@ -75,21 +75,6 @@ class Camera:
             print('Recording interrupted.')
         finally:
             return
-
-# class Review:
-#     def __init__(self, parent, mainapp):
-#         self.parent = parent
-#         self.parent.configure(background="gray", borderwidth=0)
-#         self.parent.geometry("1024x768+480+0")
-#         self.parent.title("REVIEW")
-#
-#         self.app = mainapp
-#
-#         self.frame = None
-#         self.canvas = tk.Canvas(self.parent,
-#                                 width=self.app.cam.reviewWidth, height=self.app.cam.reviewHeight,
-#                                 borderwidth=0, highlightthickness=0)
-#         self.canvas.grid(row=0, column=0)
 
 
 class Display:
@@ -168,7 +153,7 @@ class App(tk.Frame):
         self.parent = parent
         self.parent.configure(background="gray", borderwidth=0)
         self.parent.geometry("300x100+0+0")
-        self.parent.title("PIGOLF")
+        self.parent.title("PiGolf")
 
         # This protocol method is a tkinter built-in method to catch if
         # the user clicks the upper corner, "X" on Windows OS
@@ -223,7 +208,7 @@ class App(tk.Frame):
                 # print("displayThread: displayFlag set")
                 while self.displayFlag.isSet():
                     try:
-                        time.sleep(0.024)
+                        time.sleep(0.016)
                         self.cam.camera.wait_recording()
                         # print("displayThread: getFrame")
                         disp_frame = self.cam.getFrame("display")
@@ -248,7 +233,7 @@ class App(tk.Frame):
                         self.cam.record()
                     finally:
                         self.displayFlag.wait()
-                        self.cam.camera.split_recording(self.cam.stream, format='h264')
+                        self.cam.camera.split_recording(self.cam.stream, format='h264', level="4.2")
                         print('Saved')
         finally:
             return
@@ -261,7 +246,7 @@ class App(tk.Frame):
                 # print("delayThread: recFlag set")
                 while self.recFlag.isSet():
                     try:
-                        time.sleep(0.024)
+                        time.sleep(0.016)
                         self.cam.camera.wait_recording()
                         # print("delayThread: getting frame")
                         delay_frame = self.cam.getFrame("delay")
@@ -337,7 +322,7 @@ def processIncoming(self):
             self.display.inputImage = Image.fromarray(msg[1])
             # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
-            time.sleep(0.024)
+            time.sleep(0.016)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             # print("processIncoming: delay_frame created")
         else:
