@@ -323,7 +323,7 @@ def processIncoming(self):
             self.display.inputImage = Image.fromarray(msg[1])
             # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
-            time.sleep(self.fps)
+            time.sleep(self.delay)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             # print("processIncoming: delay_frame created")
         else:
