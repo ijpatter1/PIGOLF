@@ -18,16 +18,14 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.width = 1640
-        self.height = 1232
-        self.captureWidth = 1024
-        self.captureHeight = 768
+        self.width = 1024
+        self.height = 768
         self.camera.resolution = (self.width, self.height)
         self.camera.framerate = 25
         # self.camera.hflip = True
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(self.captureWidth, self.captureHeight))
-        self.delayArray = array.PiRGBArray(self.camera, size=(self.captureWidth, self.captureHeight))
+        self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
+        self.delayArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
 
         self.stream = picamera.PiCameraCircularIO(self.camera, seconds=1)
 
@@ -41,8 +39,7 @@ class Camera:
             try:
                 # print("getFrame: before display capture")
                 disp_output.truncate(0)
-                self.camera.capture(disp_output, format="rgb", use_video_port=True,
-                                    resize=(self.captureWidth, self.captureHeight))
+                self.camera.capture(disp_output, format="rgb", use_video_port=True)
                 disp_frame = disp_output.array
                 disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
@@ -73,8 +70,7 @@ class Camera:
             fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
             self.parent.currentFile = f'./swings/{fname}'
             self.camera.split_recording(self.parent.currentFile,
-                                        format="h264", splitter_port=2,
-                                        inline_headers=True, sps_timing=True)
+                                        format="h264", inline_headers=True, sps_timing=True)
         except picamera.exc.PiCameraNotRecording:
             print('Recording interrupted.')
         finally:
@@ -91,7 +87,7 @@ class Display:
         self.app = mainapp
 
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry(f"{self.app.cam.captureWidth}x{self.app.cam.captureHeight}+481+0")
+        self.parent.geometry(f"{self.app.cam.width}x{self.app.cam.height}+481+0")
         self.parent.title("DISPLAY")
 
         self.inputImage = None
