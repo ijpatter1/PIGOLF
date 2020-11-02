@@ -106,7 +106,7 @@ class Display:
         self.parent.title("DISPLAY")
 
         self.inputImage = None
-        self.outputImage = None
+        # self.outputImage = None
         self.frame = None
         self.canvas = tk.Canvas(self.parent,
                                 width=self.app.cam.dispWidth, height=self.app.cam.dispHeight,
@@ -328,15 +328,15 @@ def processIncoming(self):
         if msg[0] == 'disp_frame' and self.displayFlag.isSet():
             print("processIncoming: inside if disp_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
-            self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
-            self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
+            # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
+            self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             # print("processIncoming: disp_frame created")
         if msg[0] == 'delay_frame' and self.recFlag.isSet():
             # print("processIncoming: inside if delay_frame:")
             self.display.inputImage = Image.fromarray(msg[1])
-            self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
-            self.display.frame = ImageTk.PhotoImage(image=self.display.outputImage)
+            # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
+            self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
             time.sleep(0.025)
             self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
             # print("processIncoming: delay_frame created")
