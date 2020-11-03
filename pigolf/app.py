@@ -319,10 +319,6 @@ def processIncoming(self):
     """
     print("processIncoming: init")
     try:
-        if self.delayFlag.isSet():
-            # print("processIncoming: inside if delayFlag:")
-            time.sleep(5)
-            self.delayFlag.clear()
         msg = self.queue.get(0)
         # if msg[0] == 'disp_frame' and self.displayFlag.isSet():
         print("processIncoming: inside if disp_frame:")
@@ -342,10 +338,6 @@ def processIncoming(self):
         # else:
         #     # print("processIncoming: pass")
         #     pass
-    except:
-        # just on general principles, although we don't
-        # expect this branch to ever be taken
-        pass
     finally:
         return
 
