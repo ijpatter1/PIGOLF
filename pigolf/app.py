@@ -52,7 +52,7 @@ class Camera:
                 # disp_frame = disp_output.array
                 # disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
-                # print("getFrame: disp_frame returned")
+                print("getFrame: disp_frame returned")
                 return disp_frame
             finally:
                 pass
@@ -172,6 +172,7 @@ class App(tk.Frame):
         self.cam = Camera(self)
         self.queue = queue.Queue()
 
+        time.sleep(2)
         self.display = Display(create_window(self), self)
         self.tbar = TabBar(self)
 
