@@ -10,7 +10,7 @@ import picamera.array as array
 
 
 class MySteamingOutput(array.PiRGBAnalysis):
-    def __init(self, camera):
+    def __init__(self, camera):
         super(MySteamingOutput, self).__init__(camera)
 
     def analyze(self, a):
@@ -172,7 +172,6 @@ class App(tk.Frame):
         self.cam = Camera(self)
         self.queue = queue.Queue()
 
-        time.sleep(2)
         self.display = Display(create_window(self), self)
         self.tbar = TabBar(self)
 
