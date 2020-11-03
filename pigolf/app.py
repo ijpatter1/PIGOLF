@@ -19,6 +19,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.frame = a
         self.parent.parent.queue.put(self.frame)
         print("inside MyStreamingOutput")
+        self.truncate(0)
 
 
 class Camera:
@@ -34,7 +35,7 @@ class Camera:
         self.width = 1024
         self.height = 768
         self.camera.resolution = (self.width, self.height)
-        self.camera.framerate = 5
+        self.camera.framerate = 10
         # self.camera.hflip = True
 
         self.dispArray = None   # array.PiRGBArray(self.camera, size=(self.width, self.height))
