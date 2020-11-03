@@ -41,9 +41,9 @@ class Camera:
         self.camera.start_recording(self.stream, format='rgb')
 
     def getFrame(self, source):
-        # print("getFrame: init")
+        print("getFrame: init")
         if source == "display":
-            # print("getFrame: inside if Display")
+            print("getFrame: inside if Display")
             disp_frame = self.dispArray
             try:
                 # print("getFrame: before display capture")
