@@ -18,10 +18,10 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.width = 960
-        self.height = 720
+        self.width = 1024
+        self.height = 768
         self.camera.resolution = (self.width, self.height)
-        self.camera.framerate = 50
+        self.camera.framerate = 30
         # self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
@@ -159,7 +159,7 @@ class App(tk.Frame):
         # the user clicks the upper corner, "X" on Windows OS
         self.parent.protocol("WM_DELETE_WINDOW", lambda: ask_quit(self))
 
-        self.delay = 0.02
+        self.delay = 0.033
         self.cam = Camera(self)
         self.queue = queue.Queue()
 
@@ -320,7 +320,7 @@ def processIncoming(self):
             # print("processIncoming: disp_frame created")
         if msg[0] == 'delay_frame' and self.recFlag.isSet():
             # print("processIncoming: inside if delay_frame:")
-            self.display.inputImage = Image.fromarray(msg[1])
+            self.display.inputImage = Image.fromarray(msg[1]).rotate(90, expand=True)
             # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
             self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
             time.sleep(self.delay)
