@@ -17,6 +17,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
 
     def analyze(self, a):
         self.frame = a
+        self.parent.dispArray = self.frame
         print("inside MyStreamingOutput")
 
 
