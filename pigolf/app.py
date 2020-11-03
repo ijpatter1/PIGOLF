@@ -41,7 +41,7 @@ class Camera:
         self.dispArray = None   # array.PiRGBArray(self.camera, size=(self.width, self.height))
         self.delayArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
 
-        self.stream = MySteamingOutput(self, self.camera, 3000000)  # picamera.PiCameraCircularIO(self.camera, seconds=1)
+        self.stream = MySteamingOutput(self, self.camera, 30000000)  # picamera.PiCameraCircularIO(self.camera, seconds=1)
 
         self.camera.start_recording(self.stream, format='rgb')
 
