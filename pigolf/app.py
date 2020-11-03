@@ -13,7 +13,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
     def __init(self, camera):
         super(MySteamingOutput, self).__init__(camera)
 
-    def analysis(self, a):
+    def analyze(self, a):
         self.camera.dispArray = a
 
 
@@ -24,6 +24,7 @@ class Camera:
 
     def __init__(self, parent):
         # initialize the camera
+        print("camera initialising")
         self.parent = parent
         self.camera = picamera.PiCamera()
         self.width = 1024
@@ -43,13 +44,13 @@ class Camera:
         # print("getFrame: init")
         if source == "display":
             # print("getFrame: inside if Display")
-            disp_output = self.dispArray
+            disp_frame = self.dispArray
             try:
                 # print("getFrame: before display capture")
-                disp_output.truncate(0)
-                self.camera.capture(disp_output, format="rgb", use_video_port=True)
-                disp_frame = disp_output.array
-                disp_output.truncate(0)
+                # disp_output.truncate(0)
+                # self.camera.capture(disp_output, format="rgb", use_video_port=True)
+                # disp_frame = disp_output.array
+                # disp_output.truncate(0)
                 disp_frame = ['disp_frame', disp_frame]
                 # print("getFrame: disp_frame returned")
                 return disp_frame
