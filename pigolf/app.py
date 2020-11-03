@@ -18,10 +18,10 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.width = 1024
-        self.height = 768
+        self.width = 1280
+        self.height = 720
         self.camera.resolution = (self.width, self.height)
-        self.camera.framerate = 25
+        self.camera.framerate = 50
         # self.camera.hflip = True
 
         self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
@@ -159,7 +159,7 @@ class App(tk.Frame):
         # the user clicks the upper corner, "X" on Windows OS
         self.parent.protocol("WM_DELETE_WINDOW", lambda: ask_quit(self))
 
-        self.delay = 0.04
+        self.delay = 0.02
         self.cam = Camera(self)
         self.queue = queue.Queue()
 
