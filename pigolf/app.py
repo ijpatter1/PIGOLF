@@ -317,7 +317,7 @@ def processIncoming(self):
     Handle all messages currently in the queue, if any.
     :return:
     """
-    # print("processIncoming: init")
+    print("processIncoming: init")
     try:
         if self.delayFlag.isSet():
             # print("processIncoming: inside if delayFlag:")
