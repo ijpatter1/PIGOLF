@@ -17,9 +17,10 @@ class MySteamingOutput(array.PiRGBAnalysis):
 
     def analyze(self, a):
         self.frame = a
+        self.truncate()
         self.parent.parent.queue.put(self.frame)
         print("inside MyStreamingOutput")
-        self.truncate()
+
 
 
 class Camera:
