@@ -15,6 +15,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
 
     def analyze(self, a):
         self.camera.dispArray = a
+        print(type(a))
 
 
 class Camera:
