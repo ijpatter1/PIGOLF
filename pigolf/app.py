@@ -19,7 +19,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.frame = a
         self.parent.parent.queue.put(self.frame)
         print("inside MyStreamingOutput")
-        self.truncate(0)
+        self.truncate()
 
 
 class Camera:
