@@ -9,6 +9,14 @@ import picamera
 import picamera.array as array
 
 
+class MySteamingOutput(array.PiRGBAnalysis):
+    def __init(self, camera):
+        super(MySteamingOutput, self).__init__(camera)
+
+    def analysis(self, a):
+        self.camera.dispArray = a
+
+
 class Camera:
     """
     Video capture class with related methods
@@ -24,12 +32,12 @@ class Camera:
         self.camera.framerate = 30
         # self.camera.hflip = True
 
-        self.dispArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
+        self.dispArray = None   # array.PiRGBArray(self.camera, size=(self.width, self.height))
         self.delayArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
 
-        self.stream = picamera.PiCameraCircularIO(self.camera, seconds=1)
+        self.stream = MySteamingOutput(self.camera)  # picamera.PiCameraCircularIO(self.camera, seconds=1)
 
-        self.camera.start_recording(self.stream, format='h264')
+        self.camera.start_recording(self.stream, format='rgb')
 
     def getFrame(self, source):
         # print("getFrame: init")
