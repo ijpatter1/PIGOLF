@@ -15,7 +15,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
 
     def analyze(self, a):
         self.parent.dispArray = a
-        print(type(a))
+        print("inside MyStreamingOutput")
 
 
 class Camera:
