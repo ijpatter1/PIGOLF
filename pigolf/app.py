@@ -18,7 +18,7 @@ class Camera:
         # initialize the camera
         self.parent = parent
         self.camera = picamera.PiCamera()
-        self.width = 1280
+        self.width = 960
         self.height = 720
         self.camera.resolution = (self.width, self.height)
         self.camera.framerate = 50
@@ -87,7 +87,7 @@ class Display:
         self.app = mainapp
 
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry(f"{self.app.cam.width}x{self.app.cam.height}+481+0")
+        self.parent.geometry(f"{self.app.cam.height}x{self.app.cam.width}+481+0")
         self.parent.title("DISPLAY")
 
         self.inputImage = None
