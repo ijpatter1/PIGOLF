@@ -286,6 +286,7 @@ class App(tk.Frame):
             self.parent.destroy()
             import sys
             sys.exit(1)
+        print("periodicCall")
         if self.queue.qsize():
             print("periodicCall: there is a message in the queue!")
             processIncoming(self)
