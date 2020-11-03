@@ -1,6 +1,6 @@
 import time
 import queue
-import threading
+# import threading
 import tkinter as tk
 from tkinter import messagebox
 from PIL import ImageTk
@@ -17,7 +17,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
 
     def analyze(self, a):
         self.frame = a
-        self.parent.dispArray = self.frame
+        self.parent.parent.queue.put(self.frame)
         print("inside MyStreamingOutput")
 
 
@@ -185,93 +185,92 @@ class App(tk.Frame):
         self.running = 1
         self.currentFile = ""
 
-        # Event objects to allow threads to communicate
-        self.displayFlag = threading.Event()
-        self.displayFlag.set()
-        self.recFlag = threading.Event()
-        self.delayFlag = threading.Event()
-
-        # Thread for handling the video feed
-        self.dispThread = threading.Thread(target=self.displayThread)
-        self.dispThread.setDaemon(True)
-        self.dispThread.start()
-
-        # Thread for recording
-        self.recThread = threading.Thread(target=self.recordThread)
-        self.recThread.setDaemon(True)
-        self.recThread.start()
-
-        # Thread for handling the delay
-        self.delThread = threading.Thread(target=self.delayThread)
-        self.delThread.setDaemon(True)
-        self.delThread.start()
+        # # Event objects to allow threads to communicate
+        # self.displayFlag = threading.Event()
+        # self.displayFlag.set()
+        # self.recFlag = threading.Event()
+        # self.delayFlag = threading.Event()
+        #
+        # # Thread for handling the video feed
+        # self.dispThread = threading.Thread(target=self.displayThread)
+        # self.dispThread.setDaemon(True)
+        # self.dispThread.start()
+        #
+        # # Thread for recording
+        # self.recThread = threading.Thread(target=self.recordThread)
+        # self.recThread.setDaemon(True)
+        # self.recThread.start()
+        #
+        # # Thread for handling the delay
+        # self.delThread = threading.Thread(target=self.delayThread)
+        # self.delThread.setDaemon(True)
+        # self.delThread.start()
 
         # Start the periodic call in the GUI to check the queue
         self.periodicCall()
 
-    def displayThread(self):
-        """
-        This thread handles the video feed to be displayed
-        by the gui object.
-        :return:
-        """
-        try:
-            while self.running:
-                # print("displayThread: waiting")
-                self.displayFlag.wait()
-                # print("displayThread: displayFlag set")
-                while self.displayFlag.isSet():
-                    try:
-                        time.sleep(self.delay)
-                        self.cam.camera.wait_recording()
-                        # print("displayThread: getFrame")
-                        disp_frame = self.cam.getFrame("display")
-                        self.queue.put(disp_frame)
-                        print("displayThread: put disp_frame")
-                    except:
-                        pass
-                    finally:
-                        pass
-        finally:
-            return
+    # def displayThread(self):
+    #     """
+    #     This thread handles the video feed to be displayed
+    #     by the gui object.
+    #     :return:
+    #     """
+    #     try:
+    #         while self.running:
+    #             # print("displayThread: waiting")
+    #             self.displayFlag.wait()
+    #             # print("displayThread: displayFlag set")
+    #             while self.displayFlag.isSet():
+    #                 try:
+    #                     self.cam.camera.wait_recording()
+    #                     # print("displayThread: getFrame")
+    #                     disp_frame = self.cam.getFrame("display")
+    #                     self.queue.put(disp_frame)
+    #                     print("displayThread: put disp_frame")
+    #                 except:
+    #                     pass
+    #                 finally:
+    #                     pass
+    #     finally:
+    #         return
 
-    def recordThread(self):
-        try:
-            while self.running:
-                # print("recordThread: waiting")
-                self.recFlag.wait()
-                # print("recordThread: recFlag set")
-                if self.recFlag.isSet():
-                    try:
-                        print('Recording...')
-                        self.cam.record()
-                    finally:
-                        self.displayFlag.wait()
-                        self.cam.camera.split_recording(self.cam.stream, format='h264', level="4.2")
-                        print('Saved')
-        finally:
-            return
+    # def recordThread(self):
+    #     try:
+    #         while self.running:
+    #             # print("recordThread: waiting")
+    #             self.recFlag.wait()
+    #             # print("recordThread: recFlag set")
+    #             if self.recFlag.isSet():
+    #                 try:
+    #                     print('Recording...')
+    #                     self.cam.record()
+    #                 finally:
+    #                     self.displayFlag.wait()
+    #                     self.cam.camera.split_recording(self.cam.stream, format='h264', level="4.2")
+    #                     print('Saved')
+    #     finally:
+    #         return
 
-    def delayThread(self):
-        try:
-            while self.running:
-                # print("delayThread: waiting")
-                self.recFlag.wait()
-                # print("delayThread: recFlag set")
-                while self.recFlag.isSet():
-                    try:
-                        time.sleep(self.delay)
-                        self.cam.camera.wait_recording()
-                        # print("delayThread: getting frame")
-                        delay_frame = self.cam.getFrame("delay")
-                        self.queue.put(delay_frame)
-                        # print("delayThread: frame sent to queue")
-                    except:
-                        pass
-                    finally:
-                        pass
-        finally:
-            return
+    # def delayThread(self):
+    #     try:
+    #         while self.running:
+    #             # print("delayThread: waiting")
+    #             self.recFlag.wait()
+    #             # print("delayThread: recFlag set")
+    #             while self.recFlag.isSet():
+    #                 try:
+    #                     time.sleep(self.delay)
+    #                     self.cam.camera.wait_recording()
+    #                     # print("delayThread: getting frame")
+    #                     delay_frame = self.cam.getFrame("delay")
+    #                     self.queue.put(delay_frame)
+    #                     # print("delayThread: frame sent to queue")
+    #                 except:
+    #                     pass
+    #                 finally:
+    #                     pass
+    #     finally:
+    #         return
 
     def periodicCall(self):
         """
@@ -324,24 +323,24 @@ def processIncoming(self):
             time.sleep(5)
             self.delayFlag.clear()
         msg = self.queue.get(0)
-        if msg[0] == 'disp_frame' and self.displayFlag.isSet():
-            print("processIncoming: inside if disp_frame:")
-            self.display.inputImage = Image.fromarray(msg[1]).rotate(90, expand=True)
-            # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
-            self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
-            self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-            print("processIncoming: disp_frame created")
-        if msg[0] == 'delay_frame' and self.recFlag.isSet():
-            # print("processIncoming: inside if delay_frame:")
-            self.display.inputImage = Image.fromarray(msg[1]).rotate(90, expand=True)
-            # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
-            self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
-            time.sleep(self.delay)
-            self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-            # print("processIncoming: delay_frame created")
-        else:
-            # print("processIncoming: pass")
-            pass
+        # if msg[0] == 'disp_frame' and self.displayFlag.isSet():
+        #     print("processIncoming: inside if disp_frame:")
+        self.display.inputImage = Image.fromarray(msg[1]).rotate(90, expand=True)
+        # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
+        self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
+        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        print("processIncoming: disp_frame created")
+        # if msg[0] == 'delay_frame' and self.recFlag.isSet():
+        #     # print("processIncoming: inside if delay_frame:")
+        #     self.display.inputImage = Image.fromarray(msg[1]).rotate(90, expand=True)
+        #     # self.display.outputImage = self.display.inputImage.rotate(90, expand=True)
+        #     self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
+        #     time.sleep(self.delay)
+        #     self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        #     # print("processIncoming: delay_frame created")
+        # else:
+        #     # print("processIncoming: pass")
+        #     pass
     except:
         # just on general principles, although we don't
         # expect this branch to ever be taken
