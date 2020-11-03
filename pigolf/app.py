@@ -34,7 +34,7 @@ class Camera:
         self.width = 1024
         self.height = 768
         self.camera.resolution = (self.width, self.height)
-        self.camera.framerate = 30
+        self.camera.framerate = 5
         # self.camera.hflip = True
 
         self.dispArray = None   # array.PiRGBArray(self.camera, size=(self.width, self.height))
