@@ -39,7 +39,7 @@ class Camera:
         # self.stream = MySteamingOutput(self.camera)  # picamera.PiCameraCircularIO(self.camera, seconds=1)
         #
         # self.camera.start_recording(self.stream, format='rgb')
-        with MySteamingOutput(self.camera) as stream:
+        with MySteamingOutput(self) as stream:
             self.camera.start_recording(stream, 'rgb')
             try:
                 while True:
