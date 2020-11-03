@@ -36,9 +36,16 @@ class Camera:
         self.dispArray = None   # array.PiRGBArray(self.camera, size=(self.width, self.height))
         self.delayArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
 
-        self.stream = MySteamingOutput(self.camera)  # picamera.PiCameraCircularIO(self.camera, seconds=1)
-
-        self.camera.start_recording(self.stream, format='rgb')
+        # self.stream = MySteamingOutput(self.camera)  # picamera.PiCameraCircularIO(self.camera, seconds=1)
+        #
+        # self.camera.start_recording(self.stream, format='rgb')
+        with MySteamingOutput(self.camera) as stream:
+            self.camera.start_recording(stream, 'rgb')
+            try:
+                while True:
+                    self.camera.wait_recording(1)
+            finally:
+                self.camera.stop_recording()
 
     def getFrame(self, source):
         print("getFrame: init")
@@ -223,7 +230,7 @@ class App(tk.Frame):
                         # print("displayThread: getFrame")
                         disp_frame = self.cam.getFrame("display")
                         self.queue.put(disp_frame)
-                        # print("displayThread: put disp_frame")
+                        print("displayThread: put disp_frame")
                     except:
                         pass
                     finally:
