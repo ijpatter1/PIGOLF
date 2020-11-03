@@ -11,7 +11,7 @@ import picamera.array as array
 
 class MySteamingOutput(array.PiRGBAnalysis):
     def __init__(self, camera):
-        super(MySteamingOutput, self).__init__(camera)
+        self.camera = camera
 
     def analyze(self, a):
         self.camera.dispArray = a
@@ -36,16 +36,9 @@ class Camera:
         self.dispArray = None   # array.PiRGBArray(self.camera, size=(self.width, self.height))
         self.delayArray = array.PiRGBArray(self.camera, size=(self.width, self.height))
 
-        # self.stream = MySteamingOutput(self.camera)  # picamera.PiCameraCircularIO(self.camera, seconds=1)
-        #
-        # self.camera.start_recording(self.stream, format='rgb')
-        with MySteamingOutput(self) as stream:
-            self.camera.start_recording(stream, 'rgb')
-            try:
-                while True:
-                    self.camera.wait_recording(1)
-            finally:
-                self.camera.stop_recording()
+        self.stream = MySteamingOutput(self)  # picamera.PiCameraCircularIO(self.camera, seconds=1)
+
+        self.camera.start_recording(self.stream, format='rgb')
 
     def getFrame(self, source):
         print("getFrame: init")
