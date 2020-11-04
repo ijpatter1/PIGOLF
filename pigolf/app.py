@@ -106,7 +106,7 @@ class App(tk.Frame):
         self.height = 720
         self.resolution = "1024x768"
         self.framerate = 40
-        self.refresh = 20   # int(1000/self.framerate)
+        self.refresh = 22   # int(1000/self.framerate)
 
         self.queue = queue.Queue()
 
@@ -124,7 +124,7 @@ class App(tk.Frame):
         self.camThread.start()
 
         # Start the periodic call in the GUI to check the queue
-        time.sleep(2)
+        time.sleep(3)
         self.update()
 
     def cameraThread(self):
