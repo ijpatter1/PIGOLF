@@ -176,7 +176,7 @@ class App(tk.Frame):
         self.height = 768
         self.resolution = f"{self.width}x{self.height}"
         self.framerate = 25
-        self.delay = 1/self.framerate
+        self.delay = 1000/self.framerate
 
         self.queue = queue.Queue()
 
@@ -308,7 +308,7 @@ class App(tk.Frame):
         if self.queue.qsize():
             print(f"periodicCall: there are {self.queue.qsize()} message(s) in the queue!")
             processIncoming(self)
-        self.parent.after(1, self.periodicCall)
+        self.parent.after(self.delay, self.periodicCall)
 
 
 def ask_quit(self):
