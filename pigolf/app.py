@@ -136,6 +136,9 @@ class App(tk.Frame):
                 try:
                     while True:
                         camera.wait_recording(1)
+                        camera.start_recording('test.h264', format='h264', splitter_port=2)
+                        camera.wait_recording(5)
+                        camera.stop_recording(splitter_port=2)
                 finally:
                     camera.stop_recording()
 
