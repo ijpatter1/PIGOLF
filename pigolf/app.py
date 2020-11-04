@@ -17,10 +17,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.parent = parent
 
     def analyze(self, a):
-        # self.image = Image.fromarray(a).rotate(90, expand=True)
-        self.parent.queue.put(a)
-        self.frames += 1
-        print(self.frames)
+        self.parent.frame = a
 
 
 class Display:
@@ -110,6 +107,8 @@ class App(tk.Frame):
         self.framerate = 60
         self.refresh = int(1000 / self.framerate)
 
+        self.frame = None
+
         self.queue = queue.Queue()
 
         self.display = Display(create_window(self), self)
@@ -159,10 +158,14 @@ class App(tk.Frame):
             import sys
             sys.exit(1)
         # print("update")
-        if self.queue.qsize():
-            print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
-            processIncoming(self)
-        self.parent.after(self.refresh, self.update)
+        try:
+            self.display.canvas.create_image(0, 0, image=Image.fromarray(self.frame).rotate(90, expand=True),
+                                             anchor=tk.NW)
+        # if self.queue.qsize():
+        #     print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
+        #     processIncoming(self)
+        finally:
+            self.parent.after(self.refresh, self.update)
 
 
 def ask_quit(self):
