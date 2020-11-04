@@ -140,7 +140,6 @@ class App(tk.Frame):
     def imageThread(self):
         while self.running:
             if self.queue.qsize():
-                print(f"imThread: there are {self.queue.qsize()} messages in the queue.")
                 array = self.queue.get(0)
                 frame = Image.fromarray(array).rotate(90, expand=True)
                 tkImage = ImageTk.PhotoImage(image=frame)
