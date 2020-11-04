@@ -20,7 +20,6 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.image = Image.fromarray(a).rotate(90, expand=True)
         self.frame = ImageTk.PhotoImage(image=self.image)
         self.parent.queue.put(self.frame)
-        print("inside MyStreamingOutput")
 
 
 # class Camera:
@@ -176,7 +175,7 @@ class App(tk.Frame):
         self.height = 768
         self.resolution = f"{self.width}x{self.height}"
         self.framerate = 40
-        self.delay = int(1000/self.framerate)
+        self.delay = 80  # int(1000/self.framerate)
 
         self.queue = queue.Queue()
 
