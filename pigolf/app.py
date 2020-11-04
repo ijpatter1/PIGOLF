@@ -129,11 +129,10 @@ class App(tk.Frame):
     def cameraThread(self):
         with picamera.PiCamera(
                 resolution=self.resolution,
-                framerate=self.framerate,
-                resize=(self.width, self.height)
+                framerate=self.framerate
         ) as camera:
             with MySteamingOutput(self, camera, (self.width, self.height)) as output:
-                camera.start_recording(output, 'rgb')
+                camera.start_recording(output, format='rgb', resize=(self.width, self.height))
                 try:
                     while True:
                         camera.wait_recording(1)
