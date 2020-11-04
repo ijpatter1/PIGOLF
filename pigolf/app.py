@@ -12,12 +12,14 @@ import picamera.array as array
 class MySteamingOutput(array.PiRGBAnalysis):
     def __init__(self, parent, camera):
         super(MySteamingOutput, self).__init__(camera)
-        self.array = None
+        self.image = None
+        self.frame = None
         self.parent = parent
 
     def analyze(self, a):
-        self.array = a
-        self.parent.queue.put(self.array)
+        self.image = Image.fromarray(a).rotate(90, expand=True)
+        self.frame = ImageTk.PhotoImage(image=self.image)
+        self.parent.queue.put(self.frame)
         print("inside MyStreamingOutput")
 
 
@@ -173,7 +175,7 @@ class App(tk.Frame):
         self.width = 1024
         self.height = 768
         self.resolution = f"{self.width}x{self.height}"
-        self.framerate = 25
+        self.framerate = 5
         self.delay = 1/self.framerate
 
         self.queue = queue.Queue()
@@ -337,9 +339,9 @@ def processIncoming(self):
     try:
         msg = self.queue.get(0)
         print("processIncoming: inside if disp_frame:")
-        self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-        self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
-        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
+        # self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
+        self.display.canvas.create_image(0, 0, image=msg, anchor=tk.NW)
         print("processIncoming: disp_frame created")
         # if msg[0] == 'delay_frame' and self.recFlag.isSet():
         #     # print("processIncoming: inside if delay_frame:")
