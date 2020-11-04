@@ -13,11 +13,13 @@ class MySteamingOutput(array.PiRGBAnalysis):
     def __init__(self, parent, camera):
         super(MySteamingOutput, self).__init__(camera)
         self.image = None
+        self.frame = None
         self.parent = parent
 
     def analyze(self, a):
         self.image = Image.fromarray(a).rotate(90, expand=True)
-        msg = ImageTk.PhotoImage(image=self.image)
+        self.frame = ImageTk.PhotoImage(image=self.image)
+        msg = self.frame
         self.parent.queue.put(msg)
 
 
