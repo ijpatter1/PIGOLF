@@ -159,8 +159,8 @@ class App(tk.Frame):
             sys.exit(1)
         # print("update")
         try:
-            self.display.canvas.create_image(0, 0, image=Image.fromarray(self.frame).rotate(90, expand=True),
-                                             anchor=tk.NW)
+            self.display.canvas.create_image(0, 0, image=ImageTk.PhotoImage(
+                image=Image.fromarray(self.frame).rotate(90, expand=True)))
         # if self.queue.qsize():
         #     print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
         #     processIncoming(self)
@@ -187,21 +187,21 @@ def hide_config(self):
     self.parent.withdraw()
 
 
-def processIncoming(self):
-    """
-    Handle all messages currently in the queue, if any.
-    :return:
-    """
-    print("processIncoming: init")
-    try:
-        msg = self.queue.get(0)
-        print("processIncoming: inside if disp_frame:")
-        # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-        self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg).rotate(90, expand=True))
-        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-        print("processIncoming: disp_frame created")
-    finally:
-        return
+# def processIncoming(self):
+#     """
+#     Handle all messages currently in the queue, if any.
+#     :return:
+#     """
+#     print("processIncoming: init")
+#     try:
+#         msg = self.queue.get(0)
+#         print("processIncoming: inside if disp_frame:")
+#         # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
+#         self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg).rotate(90, expand=True))
+#         self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+#         print("processIncoming: disp_frame created")
+#     finally:
+#         return
 
 
 if __name__ == "__main__":
