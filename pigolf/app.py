@@ -105,7 +105,7 @@ class App(tk.Frame):
         self.width = 960
         self.height = 720
         self.resolution = f"{self.width}x{self.height}"
-        self.framerate = 50
+        self.framerate = 45
         self.delay = 1  # int(1000/self.framerate)
 
         self.queue = queue.Queue()
