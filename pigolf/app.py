@@ -104,7 +104,7 @@ class App(tk.Frame):
 
         self.width = 960
         self.height = 720
-        self.resolution = "1640x1232"
+        self.resolution = "1024x768"
         self.framerate = 40
         self.delay = 1  # int(1000/self.framerate)
 
