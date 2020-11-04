@@ -102,8 +102,8 @@ class App(tk.Frame):
         # the user clicks the upper corner, "X" on Windows OS
         self.parent.protocol("WM_DELETE_WINDOW", lambda: ask_quit(self))
 
-        self.width = 960
-        self.height = 720
+        self.width = 1024
+        self.height = 576
         self.resolution = "1280x720"
         self.framerate = 60
         self.refresh = int(1000/self.framerate)
