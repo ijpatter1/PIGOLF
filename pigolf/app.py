@@ -18,9 +18,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
 
     def analyze(self, a):
         self.image = Image.fromarray(a).rotate(90, expand=True)
-        self.frame = ImageTk.PhotoImage(image=self.image)
-        msg = self.frame
-        self.parent.queue.put(msg)
+        self.parent.queue.put(self.image)
 
 
 # class Camera:
@@ -104,7 +102,7 @@ class Display:
         self.parent.geometry(f"{self.app.height}x{self.app.width}+481+0")
         self.parent.title("DISPLAY")
 
-        self.inputImage = None
+        # self.inputImage = None
         self.frame = None
         self.canvas = tk.Canvas(self.parent,
                                 width=self.app.height, height=self.app.width,
@@ -277,8 +275,8 @@ def processIncoming(self):
         msg = self.queue.get(0)
         print("processIncoming: inside if disp_frame:")
         # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-        # self.display.frame = ImageTk.PhotoImage(image=self.display.inputImage)
-        self.display.canvas.create_image(0, 0, image=msg, anchor=tk.NW)
+        self.display.frame = ImageTk.PhotoImage(image=msg)
+        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
         print("processIncoming: disp_frame created")
         # if msg[0] == 'delay_frame' and self.recFlag.isSet():
         #     # print("processIncoming: inside if delay_frame:")
