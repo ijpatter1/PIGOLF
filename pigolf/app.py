@@ -10,8 +10,8 @@ import picamera.array as array
 
 
 class MySteamingOutput(array.PiRGBAnalysis):
-    def __init__(self, parent, camera):
-        super(MySteamingOutput, self).__init__(camera)
+    def __init__(self, parent, camera, size):
+        super(MySteamingOutput, self).__init__(camera, size)
         self.image = None
         self.frame = None
         self.parent = parent
@@ -104,8 +104,8 @@ class App(tk.Frame):
 
         self.width = 960
         self.height = 720
-        self.resolution = f"{self.width}x{self.height}"
-        self.framerate = 45
+        self.resolution = "1640x1232"
+        self.framerate = 10
         self.delay = 1  # int(1000/self.framerate)
 
         self.queue = queue.Queue()
@@ -127,8 +127,12 @@ class App(tk.Frame):
         self.update()
 
     def cameraThread(self):
-        with picamera.PiCamera(resolution=self.resolution, framerate=self.framerate) as camera:
-            with MySteamingOutput(self, camera) as output:
+        with picamera.PiCamera(
+                resolution=self.resolution,
+                framerate=self.framerate,
+                resize=(self.width, self.height)
+        ) as camera:
+            with MySteamingOutput(self, camera, (self.width, self.height)) as output:
                 camera.start_recording(output, 'rgb')
                 try:
                     while True:
