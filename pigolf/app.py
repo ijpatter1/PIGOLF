@@ -12,13 +12,14 @@ import picamera.array as array
 class MySteamingOutput(array.PiRGBAnalysis):
     def __init__(self, parent, camera):
         super(MySteamingOutput, self).__init__(camera)
-        self.image = None
         self.frame = None
+        self.tkImage = None
         self.parent = parent
 
     def analyze(self, a):
-        self.image = Image.fromarray(a).rotate(90, expand=True)
-        self.parent.queue.put(self.image)
+        self.frame = Image.fromarray(a).rotate(90, expand=True)
+        self.tkImage = ImageTk.PhotoImage(image=self.frame)
+        self.parent.queue.put(self.tkImage)
 
 
 # class Camera:
@@ -274,9 +275,8 @@ def processIncoming(self):
     try:
         msg = self.queue.get(0)
         print("processIncoming: inside if disp_frame:")
-        # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-        self.display.frame = ImageTk.PhotoImage(image=msg)
-        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        # self.display.frame = ImageTk.PhotoImage(image=msg)
+        self.display.canvas.create_image(0, 0, image=msg, anchor=tk.NW)
         print("processIncoming: disp_frame created")
         # if msg[0] == 'delay_frame' and self.recFlag.isSet():
         #     # print("processIncoming: inside if delay_frame:")
