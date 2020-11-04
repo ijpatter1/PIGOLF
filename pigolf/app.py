@@ -13,13 +13,12 @@ class MySteamingOutput(array.PiRGBAnalysis):
     def __init__(self, parent, camera):
         super(MySteamingOutput, self).__init__(camera)
         self.image = None
-        self.frame = None
         self.parent = parent
 
     def analyze(self, a):
         self.image = Image.fromarray(a).rotate(90, expand=True)
-        self.frame = ImageTk.PhotoImage(image=self.image)
-        self.parent.queue.put(self.frame)
+        msg = ImageTk.PhotoImage(image=self.image)
+        self.parent.queue.put(msg)
 
 
 # class Camera:
@@ -175,7 +174,7 @@ class App(tk.Frame):
         self.height = 768
         self.resolution = f"{self.width}x{self.height}"
         self.framerate = 40
-        self.delay = 80  # int(1000/self.framerate)
+        self.delay = int(1000/self.framerate)
 
         self.queue = queue.Queue()
 
@@ -214,7 +213,7 @@ class App(tk.Frame):
         self.camThread.start()
 
         # Start the periodic call in the GUI to check the queue
-        self.periodicCall()
+        self.update()
 
     def cameraThread(self):
         with picamera.PiCamera(resolution=self.resolution, framerate=self.framerate) as camera:
@@ -226,70 +225,7 @@ class App(tk.Frame):
                 finally:
                     camera.stop_recording()
 
-    # def displayThread(self):
-    #     """
-    #     This thread handles the video feed to be displayed
-    #     by the gui object.
-    #     :return:
-    #     """
-    #     try:
-    #         while self.running:
-    #             # print("displayThread: waiting")
-    #             self.displayFlag.wait()
-    #             # print("displayThread: displayFlag set")
-    #             while self.displayFlag.isSet():
-    #                 try:
-    #                     self.cam.camera.wait_recording()
-    #                     # print("displayThread: getFrame")
-    #                     disp_frame = self.cam.getFrame("display")
-    #                     self.queue.put(disp_frame)
-    #                     print("displayThread: put disp_frame")
-    #                 except:
-    #                     pass
-    #                 finally:
-    #                     pass
-    #     finally:
-    #         return
-
-    # def recordThread(self):
-    #     try:
-    #         while self.running:
-    #             # print("recordThread: waiting")
-    #             self.recFlag.wait()
-    #             # print("recordThread: recFlag set")
-    #             if self.recFlag.isSet():
-    #                 try:
-    #                     print('Recording...')
-    #                     self.cam.record()
-    #                 finally:
-    #                     self.displayFlag.wait()
-    #                     self.cam.camera.split_recording(self.cam.stream, format='h264', level="4.2")
-    #                     print('Saved')
-    #     finally:
-    #         return
-
-    # def delayThread(self):
-    #     try:
-    #         while self.running:
-    #             # print("delayThread: waiting")
-    #             self.recFlag.wait()
-    #             # print("delayThread: recFlag set")
-    #             while self.recFlag.isSet():
-    #                 try:
-    #                     time.sleep(self.delay)
-    #                     self.cam.camera.wait_recording()
-    #                     # print("delayThread: getting frame")
-    #                     delay_frame = self.cam.getFrame("delay")
-    #                     self.queue.put(delay_frame)
-    #                     # print("delayThread: frame sent to queue")
-    #                 except:
-    #                     pass
-    #                 finally:
-    #                     pass
-    #     finally:
-    #         return
-
-    def periodicCall(self):
+    def update(self):
         """
         Check every 1 ms if there is something new in the queue.
         :return:
@@ -303,11 +239,11 @@ class App(tk.Frame):
             self.parent.destroy()
             import sys
             sys.exit(1)
-        print("periodicCall")
+        print("update")
         if self.queue.qsize():
-            print(f"periodicCall: there are {self.queue.qsize()} message(s) in the queue!")
+            print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
             processIncoming(self)
-        self.parent.after(self.delay, self.periodicCall)
+        self.parent.after(self.delay, self.update)
 
 
 def ask_quit(self):
