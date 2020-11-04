@@ -106,7 +106,7 @@ class App(tk.Frame):
         self.height = 720
         self.resolution = "1024x768"
         self.framerate = 40
-        self.delay = int(1000/self.framerate)
+        self.refresh = 30   # int(1000/self.framerate)
 
         self.queue = queue.Queue()
 
@@ -159,7 +159,7 @@ class App(tk.Frame):
         if self.queue.qsize():
             print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
             processIncoming(self)
-        self.parent.after(self.delay, self.update)
+        self.parent.after(self.refresh, self.update)
 
 
 def ask_quit(self):
