@@ -191,8 +191,8 @@ def processIncoming(self):
     try:
         msg = self.queue.get(0)
         print("processIncoming: inside if disp_frame:")
-        self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-        self.display.frame = ImageTk.PhotoImage(image=msg)
+        # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
+        self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg).rotate(90, expand=True))
         self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
         print("processIncoming: disp_frame created")
     finally:
