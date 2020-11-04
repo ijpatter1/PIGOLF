@@ -13,11 +13,12 @@ class MySteamingOutput(array.PiRGBAnalysis):
     def __init__(self, parent, camera, size):
         super(MySteamingOutput, self).__init__(camera, size)
         self.image = None
-        self.frames = 0
+        self.frame = None
         self.parent = parent
 
     def analyze(self, a):
-        self.parent.frame = a
+        self.image = Image.fromarray(a).rotate(90, expand=True)
+        self.parent.queue.put(self.image)
 
 
 class Display:
@@ -105,9 +106,7 @@ class App(tk.Frame):
         self.height = 576
         self.resolution = "1280x720"
         self.framerate = 60
-        self.refresh = int(1000 / self.framerate)
-
-        self.frame = None
+        self.refresh = int(1000/self.framerate)
 
         self.queue = queue.Queue()
 
@@ -158,14 +157,10 @@ class App(tk.Frame):
             import sys
             sys.exit(1)
         # print("update")
-        try:
-            self.display.canvas.create_image(0, 0, image=ImageTk.PhotoImage(
-                image=Image.fromarray(self.frame).rotate(90, expand=True)))
-        # if self.queue.qsize():
-        #     print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
-        #     processIncoming(self)
-        finally:
-            self.parent.after(self.refresh, self.update)
+        if self.queue.qsize():
+            print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
+            processIncoming(self)
+        self.parent.after(self.refresh, self.update)
 
 
 def ask_quit(self):
@@ -187,21 +182,21 @@ def hide_config(self):
     self.parent.withdraw()
 
 
-# def processIncoming(self):
-#     """
-#     Handle all messages currently in the queue, if any.
-#     :return:
-#     """
-#     print("processIncoming: init")
-#     try:
-#         msg = self.queue.get(0)
-#         print("processIncoming: inside if disp_frame:")
-#         # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-#         self.display.frame = ImageTk.PhotoImage(image=Image.fromarray(msg).rotate(90, expand=True))
-#         self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-#         print("processIncoming: disp_frame created")
-#     finally:
-#         return
+def processIncoming(self):
+    """
+    Handle all messages currently in the queue, if any.
+    :return:
+    """
+    print("processIncoming: init")
+    try:
+        msg = self.queue.get(0)
+        print("processIncoming: inside if disp_frame:")
+        # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
+        self.display.frame = ImageTk.PhotoImage(image=msg)
+        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        print("processIncoming: disp_frame created")
+    finally:
+        return
 
 
 if __name__ == "__main__":
