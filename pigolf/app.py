@@ -13,12 +13,14 @@ class MySteamingOutput(array.PiRGBAnalysis):
     def __init__(self, parent, camera, size):
         super(MySteamingOutput, self).__init__(camera, size)
         self.image = None
-        self.frame = None
+        self.frames = 0
         self.parent = parent
 
     def analyze(self, a):
         # self.image = Image.fromarray(a).rotate(90, expand=True)
         self.parent.queue.put(a)
+        self.frames += 1
+        print(self.frames)
 
 
 class Display:
@@ -106,7 +108,7 @@ class App(tk.Frame):
         self.height = 576
         self.resolution = "1280x720"
         self.framerate = 60
-        self.refresh = int(1000/self.framerate)
+        self.refresh = int(1000 / self.framerate)
 
         self.queue = queue.Queue()
 
