@@ -105,7 +105,7 @@ class Display:
         self.inputImage = None
         self.frame = None
         self.canvas = tk.Canvas(self.parent,
-                                width=self.app.cam.height, height=self.app.cam.width,
+                                width=self.app.height, height=self.app.width,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
