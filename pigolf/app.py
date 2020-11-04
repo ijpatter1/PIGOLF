@@ -17,8 +17,8 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.parent = parent
 
     def analyze(self, a):
-        self.image = Image.fromarray(a).rotate(90, expand=True)
-        self.parent.queue.put(self.image)
+        # self.image = Image.fromarray(a).rotate(90, expand=True)
+        self.parent.queue.put(a)
 
 
 class Display:
@@ -133,7 +133,6 @@ class App(tk.Frame):
                 framerate=self.framerate
         ) as camera:
             with MySteamingOutput(self, camera, (self.width, self.height)) as output:
-                camera.start_preview()
                 camera.start_recording(output, format='rgb', resize=(self.width, self.height))
                 try:
                     while True:
@@ -192,7 +191,7 @@ def processIncoming(self):
     try:
         msg = self.queue.get(0)
         print("processIncoming: inside if disp_frame:")
-        # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
+        self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
         self.display.frame = ImageTk.PhotoImage(image=msg)
         self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
         print("processIncoming: disp_frame created")
