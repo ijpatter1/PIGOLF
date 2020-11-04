@@ -1,4 +1,4 @@
-# import time
+import time
 import queue
 import threading
 import tkinter as tk
@@ -106,7 +106,7 @@ class App(tk.Frame):
         self.height = 720
         self.resolution = "1024x768"
         self.framerate = 40
-        self.refresh = 30   # int(1000/self.framerate)
+        self.refresh = 38   # int(1000/self.framerate)
 
         self.queue = queue.Queue()
 
@@ -124,6 +124,7 @@ class App(tk.Frame):
         self.camThread.start()
 
         # Start the periodic call in the GUI to check the queue
+        time.sleep(5)
         self.update()
 
     def cameraThread(self):
