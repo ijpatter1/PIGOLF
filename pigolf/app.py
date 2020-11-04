@@ -153,7 +153,7 @@ class App(tk.Frame):
             self.parent.destroy()
             import sys
             sys.exit(1)
-        print("update")
+        # print("update")
         if self.queue.qsize():
             print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
             processIncoming(self)
