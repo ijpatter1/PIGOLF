@@ -12,14 +12,82 @@ import picamera.array as array
 class MySteamingOutput(array.PiRGBAnalysis):
     def __init__(self, parent, camera):
         super(MySteamingOutput, self).__init__(camera)
-        # self.frame = None
-        # self.tkImage = None
+        self.frame = None
+        self.tkImage = None
         self.parent = parent
 
     def analyze(self, a):
-        # self.frame = Image.fromarray(a).rotate(90, expand=True)
-        # self.tkImage = ImageTk.PhotoImage(image=self.frame)
-        self.parent.queue.put(a)
+        self.frame = Image.fromarray(a).rotate(90, expand=True)
+        self.tkImage = ImageTk.PhotoImage(image=self.frame)
+        self.parent.queue.put(self.tkImage)
+
+
+# class Camera:
+#     """
+#     Video capture class with related methods
+#     """
+#
+#     def __init__(self, parent):
+#         # initialize the camera
+#         print("camera initialising")
+#         self.parent = parent
+#         self.camera = picamera.PiCamera()
+#         self.width = 1024
+#         self.height = 768
+#         self.camera.resolution = (self.width, self.height)
+#         self.camera.framerate = 10
+#
+#         self.dispArray = None
+#         self.delayArray = None
+#
+#         self.stream = MySteamingOutput(self, self.camera)
+#
+#         self.camera.start_recording(self.stream, format='rgb')
+
+    # def getFrame(self, source):
+    #     print("getFrame: init")
+    #     if source == "display":
+    #         print("getFrame: inside if Display")
+    #         disp_frame = self.dispArray
+    #         try:
+    #             # print("getFrame: before display capture")
+    #             # disp_output.truncate(0)
+    #             # self.camera.capture(disp_output, format="rgb", use_video_port=True)
+    #             # disp_frame = disp_output.array
+    #             # disp_output.truncate(0)
+    #             disp_frame = ['disp_frame', disp_frame]
+    #             print("getFrame: disp_frame returned")
+    #             return disp_frame
+    #         finally:
+    #             pass
+    #     if source == "delay":
+    #         # print("getFrame: inside if Delay")
+    #         delay_output = self.delayArray
+    #         try:
+    #             # print("getFrame: before delay capture")
+    #             self.camera.capture(delay_output, format="rgb", use_video_port=True)
+    #             delay_frame = delay_output.array
+    #             delay_output.truncate(0)
+    #             disp_frame = ['delay_frame', delay_frame]
+    #             # print("getFrame: delay frame returned")
+    #             return disp_frame
+    #         finally:
+    #             pass
+    #     else:
+    #         err_msg = ('error', 'error')
+    #         return err_msg
+
+    # def record(self):
+    #     try:
+    #         self.camera.wait_recording()
+    #         fname = f'{time.strftime("%d-%m-%Y-%H-%M-%S")}.h264'
+    #         self.parent.currentFile = f'./swings/{fname}'
+    #         self.camera.split_recording(self.parent.currentFile,
+    #                                     format="h264", inline_headers=True, sps_timing=True)
+    #     except picamera.exc.PiCameraNotRecording:
+    #         print('Recording interrupted.')
+    #     finally:
+    #         return
 
 
 class Display:
@@ -67,8 +135,13 @@ class TabBar:
         status = self.recVar.get()
         if status:
             print("hitRec: record")
+            self.parent.displayFlag.clear()
+            self.parent.delayFlag.set()
+            self.parent.recFlag.set()
         if not status:
             print("hitRec: stop")
+            self.parent.displayFlag.set()
+            self.parent.recFlag.clear()
 
 
 class Config:
@@ -105,7 +178,6 @@ class App(tk.Frame):
         self.delay = 1  # int(1000/self.framerate)
 
         self.queue = queue.Queue()
-        self.queue2 = queue.Queue()
 
         self.display = Display(create_window(self), self)
         self.tbar = TabBar(self)
@@ -116,15 +188,32 @@ class App(tk.Frame):
         self.running = 1
         self.currentFile = ""
 
+        # Event objects to allow threads to communicate
+        # self.displayFlag = threading.Event()
+        # self.displayFlag.set()
+        # self.recFlag = threading.Event()
+        # self.delayFlag = threading.Event()
+
+        # # Thread for handling the video feed
+        # self.dispThread = threading.Thread(target=self.displayThread)
+        # self.dispThread.setDaemon(True)
+        # self.dispThread.start()
+
+        # # Thread for recording
+        # self.recThread = threading.Thread(target=self.recordThread)
+        # self.recThread.setDaemon(True)
+        # self.recThread.start()
+        #
+        # # Thread for handling the delay
+        # self.delThread = threading.Thread(target=self.delayThread)
+        # self.delThread.setDaemon(True)
+        # self.delThread.start()
+
         self.camThread = threading.Thread(target=self.cameraThread)
         self.camThread.setDaemon(True)
         self.camThread.start()
 
-        self.imThread = threading.Thread(target=self.imageThread)
-        self.imThread.setDaemon(True)
-        self.imThread.start()
-
-        # Start the update callback method in the GUI to check the queue
+        # Start the periodic call in the GUI to check the queue
         self.update()
 
     def cameraThread(self):
@@ -136,14 +225,6 @@ class App(tk.Frame):
                         camera.wait_recording(1)
                 finally:
                     camera.stop_recording()
-
-    def imageThread(self):
-        while self.running:
-            if self.queue.qsize():
-                array = self.queue.get(0)
-                frame = Image.fromarray(array).rotate(90, expand=True)
-                tkImage = ImageTk.PhotoImage(image=frame)
-                self.queue2.put(tkImage)
 
     def update(self):
         """
@@ -160,8 +241,8 @@ class App(tk.Frame):
             import sys
             sys.exit(1)
         print("update")
-        if self.queue2.qsize():
-            print(f"update: there are {self.queue2.qsize()} message(s) in the queue!")
+        if self.queue.qsize():
+            print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
             processIncoming(self)
         self.parent.after(self.delay, self.update)
 
@@ -192,7 +273,7 @@ def processIncoming(self):
     """
     print("processIncoming: init")
     try:
-        msg = self.queue2.get(0)
+        msg = self.queue.get(0)
         print("processIncoming: inside if disp_frame:")
         # self.display.frame = ImageTk.PhotoImage(image=msg)
         self.display.canvas.create_image(0, 0, image=msg, anchor=tk.NW)
