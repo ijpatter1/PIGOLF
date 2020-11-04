@@ -306,7 +306,7 @@ class App(tk.Frame):
             sys.exit(1)
         print("periodicCall")
         if self.queue.qsize():
-            print("periodicCall: there is a message in the queue!")
+            print(f"periodicCall: there are {self.queue.qsize()} message(s) in the queue!")
             processIncoming(self)
         self.parent.after(1, self.periodicCall)
 
