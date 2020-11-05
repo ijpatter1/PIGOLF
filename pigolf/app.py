@@ -124,7 +124,7 @@ class App(tk.Frame):
         self.camThread.start()
 
         # Start the periodic call in the GUI to check the queue
-        time.sleep(3)
+        # time.sleep(3)
         self.update()
 
     def cameraThread(self):
