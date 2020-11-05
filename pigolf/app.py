@@ -133,7 +133,6 @@ class App(tk.Frame):
                 framerate=self.framerate
         ) as camera:
             with MySteamingOutput(self, camera, (self.width, self.height)) as output:
-                camera.start_preview(fullscreen=False, window=(100,100, self.width, self.height))
                 camera.start_recording(output, format='rgb', resize=(self.width, self.height))
                 try:
                     while True:
