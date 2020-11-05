@@ -18,7 +18,8 @@ class MySteamingOutput(array.PiRGBAnalysis):
 
     def analyze(self, a):
         self.image = Image.fromarray(a).rotate(90, expand=True)
-        self.parent.queue.put(self.image)
+        self.frame = ImageTk.PhotoImage(image=self.image)
+        self.parent.queue.put(self.frame)
 
 
 class Display:
@@ -104,8 +105,8 @@ class App(tk.Frame):
 
         self.width = 1024
         self.height = 576
-        self.resolution = "1920x1080"
-        self.framerate = 10
+        self.resolution = "1280x720"
+        self.framerate = 45
         self.refresh = int(1000/self.framerate)
 
         self.queue = queue.Queue()
@@ -192,8 +193,8 @@ def processIncoming(self):
         msg = self.queue.get(0)
         print("processIncoming: inside if disp_frame:")
         # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-        self.display.frame = ImageTk.PhotoImage(image=msg)
-        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        # self.display.frame = ImageTk.PhotoImage(image=msg)
+        self.display.canvas.create_image(0, 0, image=msg, anchor=tk.NW)
         print("processIncoming: disp_frame created")
     finally:
         return
