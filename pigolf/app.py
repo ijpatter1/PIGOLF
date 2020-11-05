@@ -1,4 +1,4 @@
-# import time
+import time
 import queue
 import threading
 import tkinter as tk
@@ -7,7 +7,6 @@ from PIL import ImageTk
 from PIL import Image
 import picamera
 import picamera.array as array
-import cv2
 
 
 class MySteamingOutput(array.PiRGBAnalysis):
@@ -18,8 +17,8 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.parent = parent
 
     def analyze(self, a):
-        # self.image = Image.fromarray(a).rotate(90, expand=True)
-        cv2.imshow('frame', a)
+        self.image = Image.fromarray(a).rotate(90, expand=True)
+        self.parent.queue.put(self.image)
 
 
 class Display:
@@ -106,7 +105,7 @@ class App(tk.Frame):
         self.width = 1024
         self.height = 576
         self.resolution = "1280x720"
-        self.framerate = 45
+        self.framerate = 60
         self.refresh = int(1000/self.framerate)
 
         self.queue = queue.Queue()
@@ -125,7 +124,7 @@ class App(tk.Frame):
         self.camThread.start()
 
         # Start the periodic call in the GUI to check the queue
-        # time.sleep(3)
+        time.sleep(3)
         self.update()
 
     def cameraThread(self):
@@ -158,9 +157,9 @@ class App(tk.Frame):
             import sys
             sys.exit(1)
         # print("update")
-        # if self.queue.qsize():
-        #     print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
-        #     processIncoming(self)
+        if self.queue.qsize():
+            print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
+            processIncoming(self)
         self.parent.after(self.refresh, self.update)
 
 
@@ -193,8 +192,8 @@ def processIncoming(self):
         msg = self.queue.get(0)
         print("processIncoming: inside if disp_frame:")
         # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-        # self.display.frame = ImageTk.PhotoImage(image=msg)
-        self.display.canvas.create_image(0, 0, image=msg, anchor=tk.NW)
+        self.display.frame = ImageTk.PhotoImage(image=msg)
+        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
         print("processIncoming: disp_frame created")
     finally:
         return
