@@ -7,6 +7,7 @@ from PIL import ImageTk
 from PIL import Image
 import picamera
 import picamera.array as array
+import cv2
 
 
 class MySteamingOutput(array.PiRGBAnalysis):
@@ -18,8 +19,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
 
     def analyze(self, a):
         self.image = Image.fromarray(a).rotate(90, expand=True)
-        self.frame = ImageTk.PhotoImage(image=self.image)
-        self.parent.queue.put(self.frame)
+        cv2.imshow('frame', self.image)
 
 
 class Display:
@@ -158,9 +158,9 @@ class App(tk.Frame):
             import sys
             sys.exit(1)
         # print("update")
-        if self.queue.qsize():
-            print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
-            processIncoming(self)
+        # if self.queue.qsize():
+        #     print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
+        #     processIncoming(self)
         self.parent.after(self.refresh, self.update)
 
 
