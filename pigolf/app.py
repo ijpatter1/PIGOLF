@@ -1,4 +1,4 @@
-import time
+# import time
 import queue
 import threading
 import tkinter as tk
@@ -18,8 +18,8 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.parent = parent
 
     def analyze(self, a):
-        self.image = Image.fromarray(a).rotate(90, expand=True)
-        cv2.imshow('frame', self.image)
+        # self.image = Image.fromarray(a).rotate(90, expand=True)
+        cv2.imshow('frame', a)
 
 
 class Display:
