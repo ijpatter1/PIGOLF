@@ -17,7 +17,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.parent = parent
 
     def analyze(self, a):
-        self.image = ImageTk.PhotoImage(image=Image.fromarray(a))
+        self.image = Image.fromarray(a).rotate(90, expand=True)
         self.parent.queue.put(self.image)
 
 
@@ -31,13 +31,13 @@ class Display:
         self.app = mainapp
 
         self.parent.configure(background="gray", borderwidth=0)
-        self.parent.geometry(f"{self.app.width}x{self.app.height}+481+0")
+        self.parent.geometry(f"{self.app.height}x{self.app.width}+481+0")
         self.parent.title("DISPLAY")
 
         # self.inputImage = None
         self.frame = None
         self.canvas = tk.Canvas(self.parent,
-                                width=self.app.width, height=self.app.height,
+                                width=self.app.height, height=self.app.width,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.grid(row=0, column=0)
 
@@ -105,7 +105,7 @@ class App(tk.Frame):
         self.width = 1024
         self.height = 576
         self.resolution = "1280x720"
-        self.framerate = 50
+        self.framerate = 60
         self.refresh = int(1000/self.framerate)
 
         self.queue = queue.Queue()
@@ -113,8 +113,8 @@ class App(tk.Frame):
         self.display = Display(create_window(self), self)
         self.tbar = TabBar(self)
 
-        # self.config = Config(create_window(self), self)
-        # self.config.parent.withdraw()
+        self.config = Config(create_window(self), self)
+        self.config.parent.withdraw()
 
         self.running = 1
         self.currentFile = ""
@@ -159,8 +159,7 @@ class App(tk.Frame):
         # print("update")
         if self.queue.qsize():
             print(f"update: there are {self.queue.qsize()} message(s) in the queue!")
-            msg = self.queue.get(0)
-            self.display.canvas.create_image(0, 0, image=msg, anchor=tk.NW)
+            processIncoming(self)
         self.parent.after(self.refresh, self.update)
 
 
@@ -183,21 +182,21 @@ def hide_config(self):
     self.parent.withdraw()
 
 
-# def processIncoming(self):
-#     """
-#     Handle all messages currently in the queue, if any.
-#     :return:
-#     """
-#     print("processIncoming: init")
-#     try:
-#         msg = self.queue.get(0)
-#         print("processIncoming: inside if disp_frame:")
-#         # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
-#         self.display.frame = ImageTk.PhotoImage(image=msg)
-#         self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
-#         print("processIncoming: disp_frame created")
-#     finally:
-#         return
+def processIncoming(self):
+    """
+    Handle all messages currently in the queue, if any.
+    :return:
+    """
+    print("processIncoming: init")
+    try:
+        msg = self.queue.get(0)
+        print("processIncoming: inside if disp_frame:")
+        # self.display.inputImage = Image.fromarray(msg).rotate(90, expand=True)
+        self.display.frame = ImageTk.PhotoImage(image=msg)
+        self.display.canvas.create_image(0, 0, image=self.display.frame, anchor=tk.NW)
+        print("processIncoming: disp_frame created")
+    finally:
+        return
 
 
 if __name__ == "__main__":
