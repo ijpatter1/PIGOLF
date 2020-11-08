@@ -106,7 +106,7 @@ class App(tk.Frame):
         self.height = 576
         self.resolution = "1280x720"
         self.framerate = 60
-        self.refresh = int(1000/self.framerate)
+        self.refresh = 18
 
         self.queue = queue.Queue()
 
