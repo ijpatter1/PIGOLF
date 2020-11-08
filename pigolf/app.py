@@ -104,7 +104,7 @@ class App(tk.Frame):
 
         self.width = 640
         self.height = 480
-        self.resolution = "1280x720"
+        self.resolution = "640x480"
         self.framerate = 60
         self.refresh = int(1000/self.framerate)
 
