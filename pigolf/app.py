@@ -17,7 +17,7 @@ class MySteamingOutput(array.PiRGBAnalysis):
         self.parent = parent
 
     def analyze(self, a):
-        self.image = Image.fromarray(a).rotate(90, expand=True)
+        self.image = Image.fromarray(a).rotate(-90, expand=True)
         self.parent.queue.put(self.image)
 
 
